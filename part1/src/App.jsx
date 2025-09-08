@@ -1,96 +1,30 @@
 import { useState } from 'react'
 
-
-const StatisticLine = (props) => {
-  return (
-          <tr>
-            <td className="rowText">
-            {props.text} 
-            </td>
-            <td>
-            {props.value} 
-            </td>
-          </tr>
-  )
-}
-
-const Statistics = (props) => {
-  if (props.total === 0) {
-    return (
-      <div>
-        No feedback given
-      </div>
-    )
-  }
-  return(
-    <div>
-      <StatisticLine text="good" value ={props.good} />
-      <StatisticLine text="neutral" value ={props.neutral} />
-      <StatisticLine text="bad" value ={props.bad} />
-      <StatisticLine text="average" value ={props.average} />
-      <StatisticLine text="total" value ={props.total} />
-      <StatisticLine text="positive %" value ={props.positive} />
-    </div>
-  )
-}
-
-
-const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
-
 const App = () => {
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  const [total, setTotal] = useState(0)
-  const [average, setAverage] = useState(0)
-  const [positive, setPositive] = useState(0)
-  const stat ={good, neutral, bad, total, average, positive}
-
-  const handleGoodClick = () => {
-    const goodFeedBack=good+1
-    setGood(goodFeedBack)
-    const totalFeedBack=goodFeedBack+neutral+bad 
-    setTotal(totalFeedBack)
-    const averageFeedBack=((goodFeedBack-bad)/totalFeedBack).toFixed(2)
-    setAverage(averageFeedBack)
-    const positiveFeedBack=(goodFeedBack/totalFeedBack*100).toFixed(2)
-    setPositive(positiveFeedBack)
-
-  }
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
+   console.log(anecdotes.length)
   
-  
-  const handleNeutralClick = () => {
-    const neutralFeedBack=neutral+1
-    setNeutral(neutralFeedBack)
-    const totalFeedBack=good+neutralFeedBack+bad 
-    setTotal(totalFeedBack)
-    const averageFeedBack=((good-bad)/totalFeedBack).toFixed(2)
-    setAverage(averageFeedBack)
-    const positiveFeedBack=(good/totalFeedBack*100).toFixed(2)
-    setPositive(positiveFeedBack)
-  }
+   const [selected, setSelected] = useState(0)
 
-  const handleBadClick = () => {
-    const badFeedBack=bad+1
-    setBad(badFeedBack)
-    const totalFeedBack=good+neutral+badFeedBack 
-    setTotal(totalFeedBack)
-    const averageFeedBack=( (good-badFeedBack)/totalFeedBack).toFixed(2)
-    setAverage(averageFeedBack)
-    const positiveFeedBack=(good/totalFeedBack*100).toFixed(2)
-    setPositive(positiveFeedBack)
+  const handleSelectedAnecdote = ()=> {
+    const randomIndex = Math.floor(Math.random() * anecdotes.length);
+    setSelected(anecdotes[randomIndex])
   }
-
   return (
     <div>
-      <h2>give feedback</h2>
-      <Button onClick={handleGoodClick} text='good' />
-      <Button onClick={handleNeutralClick} text='neutral' />
-      <Button onClick={handleBadClick} text='bad' />
-       <h2>statistics</h2>
-      <Statistics {...stat}
-      />
+        <p>{selected}</p>
+      <button onClick={handleSelectedAnecdote}>next anecdote</button>
     </div>
   )
 }
+
 export default App
