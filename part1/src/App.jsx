@@ -11,30 +11,49 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   console.log(anecdotes.length)
-  
-  const [selected, setSelected] = useState(0)
-  const [votes, setVotes]=useState(Array(anecdotes.length).fill(0))
-  console.log(votes)
 
-  const handleSelectedAnecdote = ()=> {
-    const randomIndex = Math.floor(Math.random() * anecdotes.length);
+  // Индекс выбранного анекдота
+  const [selected, setSelected] = useState(0)
+
+  // Голоса для каждого анекдота
+  const [votes, setVotes] = useState(anecdotes.map(() => 0))
+
+  // Случайная цитата
+  const handleSelectedAnecdote = () => {
+    const randomIndex = Math.floor(Math.random() * anecdotes.length)
     setSelected(randomIndex)
   }
 
-  const handleVotes = () => {
-  const newVotes = [...votes]
-  newVotes[selected] += 1
-  setVotes(newVotes)
-}
-  
+  // Голосование за текущую цитату
+  const handleVote = () => {
+    const newVotes = [...votes]
+    newVotes[selected] += 1
+    setVotes(newVotes)
+  }
+
+  const maxVotes = Math.max(...votes)
+  const maxIndex = votes.indexOf(maxVotes)
+
   return (
     <div>
-        <p>{anecdotes[selected]}</p>
-        <p>has {votes[selected]} votes</p>
+      <h2>Random Anecdote</h2>
+      <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
       <button onClick={handleSelectedAnecdote}>next anecdote</button>
-      <button onClick={handleVotes}>vote</button>
-    </div>
+      <button onClick={handleVote}>vote</button>
+
+      <h2>Anecdote with most votes</h2>
+      <p>{anecdotes[maxIndex]}</p>
+      <p>has {maxVotes} votes</p>
+      {/* {anecdotes.map((text, i) => 
+        votes[i] === maxVotes && maxVotes > 0 ? (
+      <div key={i}>
+        <p>{text}</p>
+        <p>has {votes[i]} votes</p>
+      </div>
+  ) : null
+)} */}
+</div>
   )
 }
 
