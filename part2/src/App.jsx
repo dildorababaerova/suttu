@@ -35,7 +35,7 @@ const App = () => {
   }
 
   const filterName = persons.filter(person =>
-  person.name.toLowerCase().startsWith(searchName.toLowerCase())
+  person.name.toLowerCase().includes(searchName.toLowerCase())
 );
 
   
