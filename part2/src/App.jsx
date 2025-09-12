@@ -6,11 +6,11 @@ const App = () => {
   const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]) 
   const [newName, setNewName] = useState('')
   const [phoneNumber, setPhoneNumber] =useState('')
+  const [searchName, setSearchName]= useState('')
 
   console.log(persons)
 
   
-
   const addPerson = (e)=>{
     e.preventDefault()
 
@@ -25,7 +25,7 @@ const App = () => {
     const newObject ={
         name:newName,
         id:persons.length+1,
-        phoneNumber:''|| phoneNumber
+        phoneNumber: phoneNumber
     }
 
     setPersons(persons.concat(newObject))
@@ -34,32 +34,45 @@ const App = () => {
     setPhoneNumber('')
   }
 
+  const filterName = persons.filter(person =>
+  person.name.toLowerCase().startsWith(searchName.toLowerCase())
+);
+
+  
+
   return (
     <div>
       <h2>Phonebook</h2>
-      
-      
-      <form onSubmit={addPerson}>
         <div>
-          name: <input 
-          value ={newName}
-          onChange = {(e) => setNewName(e.target.value)}
-          />
+        filter shown with <input 
+        value= {searchName}
+        onChange={(e)=> setSearchName(e.target.value)}
+        />
         </div>
+
+        <h1>add a new</h1>
+
+        <form onSubmit={addPerson}>
+          <div>
+            name: <input 
+            value ={newName}
+            onChange = {(e) => setNewName(e.target.value)}
+            />
+          </div>
         <br/>
-        <div>
-          number: <input 
-          value ={phoneNumber}
-          onChange = {(e) => setPhoneNumber(e.target.value)}
-          />
-        </div>
+          <div>
+            number: <input 
+            value ={phoneNumber}
+            onChange = {(e) => setPhoneNumber(e.target.value)}
+            />
+          </div>
         <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <div>
-      {persons.map(person =>
+      {filterName.map(person =>
        <Person key={person.name} person={person} /> 
        )}
       </div>
