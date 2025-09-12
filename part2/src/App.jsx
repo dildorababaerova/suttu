@@ -5,6 +5,7 @@ import Person from './components/Person'
 const App = () => {
   const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]) 
   const [newName, setNewName] = useState('')
+  const [phoneNumber, setPhoneNumber] =useState('')
 
   console.log(persons)
 
@@ -23,11 +24,14 @@ const App = () => {
 
     const newObject ={
         name:newName,
-        id:persons.length+1
+        id:persons.length+1,
+        phoneNumber:''|| phoneNumber
     }
 
     setPersons(persons.concat(newObject))
+    
     setNewName('')
+    setPhoneNumber('')
   }
 
   return (
@@ -40,6 +44,13 @@ const App = () => {
           name: <input 
           value ={newName}
           onChange = {(e) => setNewName(e.target.value)}
+          />
+        </div>
+        <br/>
+        <div>
+          number: <input 
+          value ={phoneNumber}
+          onChange = {(e) => setPhoneNumber(e.target.value)}
           />
         </div>
         <div>
