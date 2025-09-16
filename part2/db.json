@@ -21,17 +21,17 @@
       "id": "4"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "111",
       "phoneNumber": "1111"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "www",
       "phoneNumber": "222"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "",
       "phoneNumber": ""
     },
@@ -44,6 +44,11 @@
       "id": "3f32",
       "name": "wwwtest",
       "phoneNumber": "333"
+    },
+    {
+      "id": "f0a7",
+      "name": "new with json-server",
+      "phoneNumber": "7777"
     }
   ]
 }

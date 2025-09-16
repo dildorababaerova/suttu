@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
+import noteService from './services/notes'
 
 
 const App = () => {
@@ -13,10 +13,11 @@ const App = () => {
 
   
  useEffect(() =>{
-    axios.get('http://localhost:3001/persons')
-    .then(response =>{
-        setPersons(response.data)
-        console.log('Response', response.data)
+    noteService
+    .getAll()
+    .then(initialNote =>{
+        setPersons(initialNote)
+        console.log('Response', initialNote)
     })
  }, []
 )
@@ -38,11 +39,11 @@ const App = () => {
         phoneNumber: phoneNumber
     }
 
-    axios
-    .post('http://localhost:3001/persons', newObject)
-    .then(response => {
-      console.log(response)
-      setPersons(persons.concat(response.data))
+    noteService
+    .create(newObject)
+    .then(returnedNote => {
+      console.log("Reterned", returnedNote)
+      setPersons(persons.concat(returnedNote))
     })
 
     
