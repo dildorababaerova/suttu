@@ -1,8 +1,10 @@
-const Person =({person})=>{
+const Person =({person, toggleDelete})=>{
     return (
-        <div>
-            <li>{person.name} {person.phoneNumber}</li>
-        </div>
+        <li>
+            {person.name} 
+            {person.phoneNumber}
+            <button onClick ={toggleDelete}>delete</button>
+        </li>
     )
 }
 
