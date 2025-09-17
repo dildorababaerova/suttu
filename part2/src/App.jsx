@@ -28,7 +28,17 @@ const App = () => {
     const checkNames = persons.find(person=> person.name===newName)
 
     if (checkNames) {
-      alert(`${newName} is already added to phonebook`)
+      alert(`${newName} is already added to phonebook, replase the old number with a new one?`)
+      const updatedPerson = {...checkNames, phoneNumber}
+      personService
+      .update(checkNames.id, updatedPerson)
+      .then((returnedNote)=>{
+        setPersons(persons.map(person=> person.id===checkNames.id? returnedNote: person))
+      })
+      .catch(error => {
+        alert(`${newName} is already removed from server`)
+        setPersons(persons.filter(person => person.id !== checkNames.id))
+      })
       return
     }
 

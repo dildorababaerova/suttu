@@ -12,7 +12,7 @@ const create = (newObject) => {
     return requestServer.then(response =>response.data)
 }
 const update = (id, updateNote) => {
-    const requestServer = axios.post(`${baseUrl}/${id}`, updateNote)
+    const requestServer = axios.put(`${baseUrl}/${id}`, updateNote)
     return requestServer.then(response =>response.data)
 }
 
