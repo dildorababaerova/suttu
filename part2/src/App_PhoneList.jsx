@@ -3,6 +3,7 @@ import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [phoneNumber, setPhoneNumber] =useState('')
   const [searchName, setSearchName]= useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   
  useEffect(() =>{
@@ -28,17 +31,25 @@ const App = () => {
     const checkNames = persons.find(person=> person.name===newName)
 
     if (checkNames) {
-      alert(`${newName} is already added to phonebook, replase the old number with a new one?`)
+      if (window.confirm(`${newName} is already added to phonebook, replase the old number with a new one?`)) {
       const updatedPerson = {...checkNames, phoneNumber}
       personService
       .update(checkNames.id, updatedPerson)
       .then((returnedNote)=>{
         setPersons(persons.map(person=> person.id===checkNames.id? returnedNote: person))
+        setNewName('')
+        setPhoneNumber('')
       })
       .catch(error => {
-        alert(`${newName} is already removed from server`)
+        setErrorMessage(`${newName} is already removed from server`)
+        setTimeout(()=>{
+        setErrorMessage(null)
+          }, 5000)
         setPersons(persons.filter(person => person.id !== checkNames.id))
+        setNewName('')
+        setPhoneNumber('')
       })
+    }
       return
     }
 
@@ -54,6 +65,10 @@ const App = () => {
     .then(returnedNote => {
       console.log("Reterned", returnedNote)
       setPersons(persons.concat(returnedNote))
+      setSuccessMessage(`${newObject.name} added`)
+      setTimeout(()=>{
+        setSuccessMessage(null)
+      }, 5000)
       setNewName('')
       setPhoneNumber('')
     })
@@ -61,15 +76,21 @@ const App = () => {
 
   const toggleDeleteOf = (id) => {
     const person = persons.find(person => person.id===id)
-    console.log('person should deleted soon',person.id)
-    if (window.confirm(`Delete ${person.name}`))
-    {personService
+    if (window.confirm(`Delete ${person.name}`)) {
+    personService
     .deletePerson(id)
     .then(() => {
       setPersons(persons.filter(person => person.id != id))
+      setSuccessMessage(`${person.name} deleted`)
+      setTimeout(()=>{
+        setSuccessMessage(null)
+      }, 5000)
     })
     .catch(error =>{
-      alert(`${person.name} already deleted`)
+      setErrorMessage(`${person.name} already deleted`)
+      setTimeout(()=> {
+        setErrorMessage(null)
+          }, 5000)
       setPersons(persons.filter(person => person.id != id))
     })
   }
@@ -91,6 +112,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification successMessage={successMessage} errorMessage={errorMessage}/>
           <Filter 
           handleSearch={handleSearch} 
           searchName={searchName}
