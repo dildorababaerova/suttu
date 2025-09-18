@@ -1,49 +1,45 @@
 import { useState, useEffect } from 'react'
-import ratesService from './services/rates'
+import coutriesService from './services/countries'
+import Country from './components/Country'
+import CountryDetail from './components/CountryDetail'
 
-const App = () => {
-  const [value, setValue] = useState('')
-  const [rates, setRates] = useState({})
-  const [currency, setCurrency] = useState(null)
+const App =() => {
 
-  useEffect(() => {
-    console.log('effect run, currency is now', currency)
+const [countries, setCountries]=useState([])
+const [searchCountry, setSearchCountry] = useState('')
 
-    // skip if currency is not defined
-    if (currency) {
-      console.log('fetching exchange rates...', currency)
-      ratesService
-      .getAll(currency)
-        .then(ratesData => {
-          setRates(ratesData)
-        })
-    }
-  }, [currency])
 
-  const handleChange = (event) => {
-    setValue(event.target.value)
-  }
+useEffect(()=>{
+    coutriesService
+    .getAll()
+    .then(allCoutry =>{
+        setCountries(allCoutry)
+    })
+    // console.log('NAME',allCoutry.name.common)
+}, [])
 
-  const onSearch = (event) => {
-    event.preventDefault()
-    setCurrency(value)
-  }
 
-  return (
+const filterCountry=countries.filter(country=>country.name.common.toLowerCase().includes(searchCountry.toLowerCase()))
+console.log('Filtered', filterCountry);
+
+return (
     <div>
-      <form onSubmit={onSearch}>
-        currency: 
         <input 
-        value={value} 
-        onChange={handleChange} 
+        type="text"
+        value ={searchCountry} 
+        onChange ={(e) =>setSearchCountry(e.target.value)}
+        placeholder="Search country..." 
         />
-        <button type="submit">exchange rate</button>
-      </form>
-      <pre>
-        {JSON.stringify(rates, null, 2)}
-      </pre>
+
+        { (filterCountry.length===1)
+        ? <CountryDetail  country={filterCountry[0]}/>
+        : (filterCountry.length>10)
+        ? <div>Too many matches, specify another filter</div>
+        : filterCountry.map(country=> (
+        <Country key ={country.cca3} country={country}/>))
+        }
     </div>
-  )
+)
 }
 
 export default App
