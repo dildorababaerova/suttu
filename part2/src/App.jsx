@@ -7,6 +7,7 @@ const App =() => {
 
 const [countries, setCountries]=useState([])
 const [searchCountry, setSearchCountry] = useState('')
+const [country, setCountry] = useState('')
 
 
 useEffect(()=>{
@@ -15,8 +16,14 @@ useEffect(()=>{
     .then(allCoutry =>{
         setCountries(allCoutry)
     })
-    // console.log('NAME',allCoutry.name.common)
-}, [])
+    }, [])
+
+
+
+const handleDetail = (country) => {
+  setCountry(country)
+}
+
 
 
 const filterCountry=countries.filter(country=>country.name.common.toLowerCase().includes(searchCountry.toLowerCase()))
@@ -36,8 +43,10 @@ return (
         : (filterCountry.length>10)
         ? <div>Too many matches, specify another filter</div>
         : filterCountry.map(country=> (
-        <Country key ={country.cca3} country={country}/>))
+        <Country key ={country.cca3} country={country} handleDetail= {handleDetail}/>))
         }
+
+        {country && <CountryDetail country={country} />}
     </div>
 )
 }
