@@ -8,13 +8,16 @@ const App =() => {
 const [countries, setCountries]=useState([])
 const [searchCountry, setSearchCountry] = useState('')
 const [country, setCountry] = useState('')
+// const [capital, setCapital] = useState('');
+const [coordsList, setCoordsList] = useState(null);
+const [forecast, setForecast] = useState(null)
 
 
 useEffect(()=>{
     coutriesService
     .getAll()
-    .then(allCoutry =>{
-        setCountries(allCoutry)
+    .then(allCountry =>{
+        setCountries(allCountry)
     })
     }, [])
 
@@ -22,7 +25,20 @@ useEffect(()=>{
 
 const handleDetail = (country) => {
   setCountry(country)
+  if (!country.capital || country.capital.length === 0) return;
+const capitalName = country.capital[0]; 
+  coutriesService
+  .getCoordinates(capitalName)
+  .then(result => {
+    if (!result) return;
+    setCoordsList(result)
+  
+  coutriesService
+  .getForecast(capitalName, result.lat, result.lon)
+  .then(results => setForecast(results))
+  })
 }
+
 
 
 
@@ -46,7 +62,7 @@ return (
         <Country key ={country.cca3} country={country} handleDetail= {handleDetail}/>))
         }
 
-        {country && <CountryDetail country={country} />}
+        {country && <CountryDetail country={country} forecast ={forecast} coords= {coordsList} />}
     </div>
 )
 }
