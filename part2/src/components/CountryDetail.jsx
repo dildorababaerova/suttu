@@ -26,25 +26,22 @@ const weatherIcons = {
   99: "⛈️"
 };
 
-const CountryDetail = ({ country, forecast }) => {
+const CountryDetail = ({ country, forecast, handleDetail }) => {
   if (!country) return null;
 
   const language = Object.values(country.languages);
-  const flagStyle = { width: "100px", height: "70px" };
+  const flagStyle = { 
+    width: "100px", 
+    height: "70px" 
+  };
 
-  // Безопасно достаём данные
-  const daily = forecast?.daily;
-  const date = daily?.time?.[0];
-  const minTemp = daily?.temperature_2m_min?.[0];
-  const maxTemp = daily?.temperature_2m_max?.[0];
-  const weatherCode = Number(daily?.weathercode?.[0]);
-  const icon = weatherIcons[weatherCode] || "🌥️";
+  
 
   return (
     <div>
       <h1>{country.name.common}</h1>
       <div>
-        Capital: {country.capital ? country.capital.join(", ") : "нет столицы"}
+        Capital: {country.capital ? country.capital.join(", ") : "--"}
       </div>
       <div>Area: {country.area}</div>
 
@@ -61,22 +58,36 @@ const CountryDetail = ({ country, forecast }) => {
         style={flagStyle}
       />
 
-      {daily ? (
+      <h2>Weather</h2>
+      {!forecast ? (
         <div>
-          <h2>Weather (today)</h2>
-          <p>Date: {date}</p>
-          <p>
-            Weather: {icon} (code: {daily.weathercode[0]})
-          </p>
-          <p>Low temperature: {minTemp} °C</p>
-          <p>High temperature: {maxTemp} °C</p>
+          <p>Weather is loading...</p>
         </div>
-      ) : (
-        <p>Прогноз ещё загружается...</p>
+      ): (
+          <table border="1" cellPadding="5">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Min temp (°C)</th>
+              <th>Max temp (°C)</th>
+              <th>Weather</th>
+            </tr>
+          </thead>
+          <tbody>
+            {forecast.daily.time.map((date, i) => (
+              <tr key={date}>
+                <td>{date}</td>
+                <td>{forecast.daily.temperature_2m_min[i]}</td>
+                <td>{forecast.daily.temperature_2m_max[i]}</td>
+                <td>{weatherIcons[forecast.daily.weathercode[i]] || "❔"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
-    </div>
-  );
-};
+       </div>
+    );
+  };
 
 
 export default CountryDetail;

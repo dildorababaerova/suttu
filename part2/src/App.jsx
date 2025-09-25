@@ -8,8 +8,6 @@ const App =() => {
 const [countries, setCountries]=useState([])
 const [searchCountry, setSearchCountry] = useState('')
 const [country, setCountry] = useState('')
-// const [capital, setCapital] = useState('');
-const [coordsList, setCoordsList] = useState(null);
 const [forecast, setForecast] = useState(null)
 
 
@@ -21,8 +19,6 @@ useEffect(()=>{
     })
     }, [])
 
-
-
 const handleDetail = (country) => {
   setCountry(country)
   if (!country.capital || country.capital.length === 0) return;
@@ -31,16 +27,12 @@ const capitalName = country.capital[0];
   .getCoordinates(capitalName)
   .then(result => {
     if (!result) return;
-    setCoordsList(result)
   
   coutriesService
   .getForecast(capitalName, result.lat, result.lon)
   .then(results => setForecast(results))
   })
 }
-
-
-
 
 const filterCountry=countries.filter(country=>country.name.common.toLowerCase().includes(searchCountry.toLowerCase()))
 console.log('Filtered', filterCountry);
@@ -55,14 +47,15 @@ return (
         />
 
         { (filterCountry.length===1)
-        ? <CountryDetail  country={filterCountry[0]}/>
+        ? filterCountry.map(country=> (
+        <Country key ={country.cca3} country={country} handleDetail= {handleDetail}/>))
         : (filterCountry.length>10)
         ? <div>Too many matches, specify another filter</div>
         : filterCountry.map(country=> (
         <Country key ={country.cca3} country={country} handleDetail= {handleDetail}/>))
         }
 
-        {country && <CountryDetail country={country} forecast ={forecast} coords= {coordsList} />}
+        {country && <CountryDetail country={country} forecast ={forecast} />}
     </div>
 )
 }
