@@ -79,7 +79,7 @@ app.delete('/api/notes/:id', (request, response) => {
 
 
 app.put('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
+  const id = request.params.id
   const body = request.body
 
   const note = notes.find(n => n.id === id)
