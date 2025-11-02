@@ -77,6 +77,23 @@ app.delete('/api/notes/:id', (request, response) => {
   response.status(204).end()
 })
 
+
+app.put('/api/notes/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const body = request.body
+
+  const note = notes.find(n => n.id === id)
+  if (!note) {
+    return response.status(404).json({ error: 'note not found' })
+  }
+
+  const updatedNote = { ...note, ...body }
+  notes = notes.map(n => n.id !== id ? n : updatedNote)
+
+  response.json(updatedNote)
+})
+
+
 const PORT = process.env.PORT ||3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
