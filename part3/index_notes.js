@@ -23,6 +23,25 @@ let notes = [
   },
 ]
 
+// Custom vwersion
+const customFormat = (tokens, req, res) => {
+  // Add body if request is Post or PUT (POST/PUT)
+  const body = (req.method === 'POST' || req.method === 'PUT') ? JSON.stringify(req.body) : ''
+
+  //Forming log string
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms',
+    body
+  ].join(' ')
+}
+
+// solving morgan with custom format
+app.use(morgan(customFormat))
+
 app.use(express.json())
 
 app.get('/', (request, response) => {
