@@ -38,11 +38,8 @@ const customFormat = (tokens, req, res) => {
     body
   ].join(' ')
 }
-
 // solving morgan with custom format
 app.use(morgan(customFormat))
-
-app.use(express.json())
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
