@@ -4,11 +4,10 @@ const morgan = require('morgan')
 const chalk = require('chalk') // убедись, что установлен: npm install chalk@4
 require('dotenv').config()
 const app = express()
-const Person = require('./models/person')
-
-// Middleware
 app.use(express.json())
-app.use(cors())
+const Person = require('./models/person')
+const errorHandler = require('./errorHandler')
+// Middleware
 app.use(express.static('dist'))
 
 
@@ -82,60 +81,66 @@ app.use(morgan(customFormat))
 // -------------------------
 
 // Генерация уникального ID
-const getId = () => {
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(p => Number(p.id)))
-    : 0
-  return String(maxId + 1)
-}
+// const getId = () => {
+//   const maxId = persons.length > 0
+//     ? Math.max(...persons.map(p => Number(p.id)))
+//     : 0
+//   return String(maxId + 1)
+// }
 
 // -------------------------
 // Роуты
 // -------------------------
 
 // /info
-app.get('/api/info', (req, res) => {
+app.get('/api/info', (req, res, next) => {
   const now = new Date()
-  res.send(`
-    <div>Phonebook has info for ${persons.length} people</div>
-    <div>${now.toString()}</div>
-  `)
+  Person.countDocuments({})
+  .then(count => {
+
+    res.send(`
+      <div>Phonebook has info for ${count} people</div>
+      <div>${now.toString()}</div>
+    `)
+  })
 })
 
 // GET all
-app.get('/api/persons', (req, res) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({}).then(persons=> {
     res.json(persons)
   })
+  .catch(error => next(error))
 })
 
 // GET by id
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id).then(person => {
-    res.json(person)
+    if (person )
+    {res.json(person)
+    } else {
+        res.status(404).end()
+      }
+    })
+    .catch(error => next(error))
   })
-})
 
 // DELETE by id
-app.delete('/api/persons/:id', (req, res) => {
-  Person.findByIdAndRemove(req.params.id)
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndDelete(req.params.id)
     .then(result => {
       if (result) {
-        // Документ найден и удалён
         res.status(204).end()
       } else {
-        // Документ с таким id не найден
         res.status(404).json({ error: 'person not found' })
       }
     })
-    .catch(error => {
-      // Некорректный id или другая ошибка
-      res.status(400).json({ error: 'malformatted id' })
+    .catch(error => next(error))
     })
-})
+
 
 // POST new person
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
 
   if (!body.name || !body.phoneNumber) {
@@ -163,10 +168,16 @@ app.post('/api/persons', (req, res) => {
         res.json(savedPerson)
       }
     })
-    .catch(error => {
-      res.status(500).json({ error: error.message })
+    .catch(error => next(error))
     })
-})
+
+const unknownEndpoint = (req, res) => {
+  res.send({error:'unknown endpoint'})
+}
+
+app.use(unknownEndpoint)
+
+app.use(errorHandler)
 
 // -------------------------
 // Старт сервера
