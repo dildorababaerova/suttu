@@ -171,6 +171,14 @@ app.post('/api/persons', (req, res, next) => {
     .catch(error => next(error))
     })
 
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+  } else {
+    res.status(404).json({ error: 'unknown endpoint' })
+  }
+})
+
 const unknownEndpoint = (req, res) => {
   res.send({error:'unknown endpoint'})
 }
