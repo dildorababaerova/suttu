@@ -9,7 +9,7 @@ app.use(express.json())
 const Person = require('./models/person')
 const errorHandler = require('./errorHandler')
 // Middleware
-app.use(express.static(path.join(__dirname, 'part2','dist')))
+app.use(express.static('dist'))
 
 
 
@@ -172,9 +172,9 @@ app.post('/api/persons', (req, res, next) => {
     .catch(error => next(error))
     })
 
-app.get(/^(?!\/api).*/, (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'part2','dist', 'index.html'))
-})
+// app.get(/^(?!\/api).*/, (req, res) => {
+//     res.sendFile(path.resolve(__dirname, 'part2','dist', 'index.html'))
+// })
 
 const unknownEndpoint = (req, res) => {
   res.send({error:'unknown endpoint'})
