@@ -21,8 +21,8 @@ mongoose.set('strictQuery', false)
     const personSchema = new mongoose.Schema({
         name: {
           type:String,
-          minLength:2,
-          required:true
+          minLength:[3, 'Name must be at least 3 characters long'],
+          required:[true, 'Name is required']
         },
         phoneNumber:{
           type:String,
