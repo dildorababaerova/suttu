@@ -26,8 +26,19 @@ mongoose.set('strictQuery', false)
         },
         phoneNumber:{
           type:String,
-          minLength:11,
-          required:true
+          minLength:8,
+          validate:{
+            validator:function(v) {
+              // ^ - начало строки
+              // [\w\d]{2,3} - 2-3 символа (буквы или цифры)
+              // - - дефис
+              // .+ - один или больше любых символов
+              // $ - конец строки
+              return /^\d{2,3}-\d{2,}$/.test(v);
+            },
+            message: props => `${props.value} is not a valid phone number!`
+          },
+          required:[true, 'User phone number required!']
         }
     })
 
