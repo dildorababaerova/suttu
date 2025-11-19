@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "build:ui": "shx rm -rf dist && cd ../part2 && npm run build && shx cp -r dist ../part3",
     "lint": "eslint .",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
