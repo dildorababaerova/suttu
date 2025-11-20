@@ -54,9 +54,9 @@ const blogs = [
 ]
 
 
-describe('total likes', () => {
-    test('total likes of blogs', () => {
-        assert(listHelper.totalLikes(blogs), 36)
+describe('favorite blog', () => {
+    test('favorite blog of blogs', () => {
+        assert(listHelper.favoriteBlogMax(blogs), "Canonical string reduction")
     })
 })
 

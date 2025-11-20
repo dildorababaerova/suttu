@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const blogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -57,17 +59,89 @@ const dummy = (blogs) => {
 
 const totalLikes = (blogs) => {
     return blogs.reduce((sum, blog ) => sum + blog.likes, 0)
+}
 
-    
+const favoriteBlog = (blogs) => {
+    return blogs.length > 0 ? blogs.reduce((a,b) => (a.likes>b.likes ? a : b), blogs[0] ) :null
+}
+
+const favoriteBlogMax = (blogs) => {
+
+    const maxLikes =Math.max(...blogs.map(blog => blog.likes))
+
+
+    return blogs.find(blog => blog.likes === maxLikes).title
 }
 
 
 const tlikes = totalLikes(blogs)
+const fblog = favoriteBlog(blogs)
+const mblog = favoriteBlogMax(blogs)
 
 console.log(tlikes)
+console.log(fblog)
+console.log(mblog)
+
+
+const mostBlogAuthor = _
+.chain(blogs)
+.groupBy('author')
+.map((blogs, author) => ({
+        author,
+        blogsCount: blogs.length,
+    }))
+.maxBy('blogsCount')
+.value()
+    
+
+console.log('LODASH',mostBlogAuthor)
+
+
+const mostBlog =(blogs) => {
+
+    const blogsByAuthor = _.groupBy(blogs, 'author')
+    console.log("blogs by authors", blogsByAuthor)
+    
+    const blogsByAuthorCount = _.map(blogsByAuthor, (blogs, author) => ({
+        author, 
+        blogsCount: blogs.length
+    }))
+    
+    console.log('Count', blogsByAuthorCount)
+    
+    const maxBlogsByAuthorCount = _.maxBy(blogsByAuthorCount, 'blogsCount')
+    
+    
+    return maxBlogsByAuthorCount
+}
+console.log('Max',mostBlog(blogs))
+
+
+
+ const blogsAuthorLikes =(blogs) =>{
+
+     const blogsByAuthor = _.groupBy(blogs, 'author')
+     
+     const blogsByAuthorLikes = _.map(blogsByAuthor, (blogs, author) => ({
+         author, 
+         blogsLikes: _.sumBy(blogs, 'likes')
+     }))
+     console.log('Likes', blogsByAuthorLikes)
+     
+     const maxBlogsByAuthorLikes = _.maxBy(blogsByAuthorLikes, 'blogsLikes')
+     console.log(maxBlogsByAuthorLikes)
+    
+     return maxBlogsByAuthorLikes
+ }
+
+ console.log('LIKES', blogsAuthorLikes(blogs) )
+
 
 
 module.exports = {
   dummy,
-  totalLikes, 
+  totalLikes,
+  favoriteBlogMax,
+  mostBlog,
+  blogsAuthorLikes,
 }

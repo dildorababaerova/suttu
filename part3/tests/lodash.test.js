@@ -54,9 +54,14 @@ const blogs = [
 ]
 
 
-describe('total likes', () => {
-    test('total likes of blogs', () => {
-        assert(listHelper.totalLikes(blogs), 36)
+describe('most blogs by author', () => {
+    test('most blogs by author', () => {
+        assert(listHelper.mostBlog(blogs), { author: 'Robert C. Martin', blogsCount: 3 })
+    })
+})
+describe('most likes by author', () => {
+    test('most likes by author', () => {
+        assert(listHelper.blogsAuthorLikes(blogs), { author: 'Edsger W. Dijkstra', blogsLikes: 17 })
     })
 })
 
