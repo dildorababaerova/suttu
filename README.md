@@ -53,3 +53,5 @@ export default [
 
 `npm install --save-dev chalk@4`
 `npm install --save-dev shx`
+`npm install cross-env`
+`npm install --save-dev supertest `

@@ -6,7 +6,7 @@ if (process.argv.length>5) {
 }
 const password = process.argv[2]
 
-const url=`mongodb+srv://mongoDidi:${password}@cluster0.6tgm7kr.mongodb.net/personApp?appName=Cluster0`
+const url=`mongodb+srv://mongoDidi:${password}@cluster0.6tgm7kr.mongodb.net/testPersonApp?appName=Cluster0`
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url)

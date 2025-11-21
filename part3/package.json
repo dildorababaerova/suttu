@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV = production node index.js",
-    "dev": "NODE_ENV = development node --watch index.js",
-    "test": "NODE_ENV = test node --test",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test",
     "build:ui": "shx rm -rf dist && cd ../part2 && npm run build && shx cp -r dist ../part3",
     "lint": "eslint .",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
@@ -16,6 +16,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "lodash": "^4.17.21",
@@ -27,6 +28,7 @@
     "@stylistic/eslint-plugin": "^5.5.0",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
-    "shx": "^0.4.0"
+    "shx": "^0.4.0",
+    "supertest": "^7.1.4"
   }
 }
