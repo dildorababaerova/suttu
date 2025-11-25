@@ -55,3 +55,27 @@ export default [
 `npm install --save-dev shx`
 `npm install cross-env`
 `npm install --save-dev supertest `
+The following command only runs the tests found in the tests/note_api.test.js file:
+`npm test -- tests/note_api.test.js` // tested, works only this command in Windows
+`npm test -- --test-name-pattern="a specific note is within the returned notes"`
+`npm test -- --test-only`
+
+200 OK — запрос выполнен успешно, данные возвращены (например, GET /api/persons).
+
+201 Created — новый ресурс успешно создан (например, POST /api/persons).
+
+204 No Content — запрос успешен, но тело ответа пустое (например, успешное удаление DELETE /api/persons/:id).
+
+400 Bad Request — неверный запрос, например, отсутствуют обязательные поля (name или phoneNumber).
+
+401 Unauthorized — не авторизован для доступа к ресурсу.
+
+403 Forbidden — авторизован, но доступ запрещён.
+
+404 Not Found — ресурс не найден (неверный путь или ID).
+
+409 Conflict — конфликт, например, при попытке создать дубликат.
+
+500 Internal Server Error — непредвиденная ошибка на сервере (например, сбой базы данных).
+
+503 Service Unavailable — сервер временно недоступен (например, из-за нагрузки).
