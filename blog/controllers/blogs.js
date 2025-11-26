@@ -3,18 +3,46 @@ const Blog = require('../models/blog')
 
 
 
-blogsRouter.get('/', (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs)
-  })
+blogsRouter.get('/', async (req, res) => {
+  const blogs = await Blog.find({});
+  res.json(blogs);
 })
 
-blogsRouter.post('/', (request, response) => {
-  const blog = new Blog(request.body)
+blogsRouter.get('/:id', async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+  if (blog) {
+  res.json(blog);
+} else {
+  res.status(404).end();
+}
+})
 
-  blog.save().then((result) => {
-    response.status(201).json(result)
+blogsRouter.delete('/:id', async (req, res) => {
+  const blogToDelete= await Blog.findByIdAndDelete(req.params.id)
+  if (blogToDelete) {
+    res.status(204).end()
+  }else {
+    res.status(404).json({error: 'blog not found'})
+  }
+})
+
+
+blogsRouter.post('/', async (req, res) => {
+  const body = req.body
+
+if (!body.title|| !body.author || !body.url) {
+    return res.status(400).json({ error: 'blog title or author missing' })
+  }
+
+  const newBlog = new Blog({
+    title:body.title,
+    author:body.author,
+    url: body.url,
+    likes:body.likes || 0
   })
+
+  const savedBlog = await newBlog.save()
+    res.status(201).json(savedBlog)
 })
 
 module.exports = blogsRouter
