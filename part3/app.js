@@ -5,6 +5,7 @@ const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const morganToken = require('./utils/morgan')
 const personsRouter= require('./controllers/persons')
+const userRouter =require('./controllers/users')
 
 
 const app = express()
@@ -27,6 +28,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(morganToken)
 app.use('/api/persons', personsRouter)
+app.use('/api/users', userRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

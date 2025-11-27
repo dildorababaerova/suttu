@@ -79,3 +79,136 @@ The following command only runs the tests found in the tests/note_api.test.js fi
 500 Internal Server Error — непредвиденная ошибка на сервере (например, сбой базы данных).
 
 503 Service Unavailable — сервер временно недоступен (например, из-за нагрузки).
+
+1️⃣ Lodash
+
+_.groupBy(array, 'key') → группирует объекты по значению ключа.
+
+_.map(grouped, (items, key) => ...) → перебирает сгруппированные данные; key — это имя группы.
+
+_.sumBy(array, 'field') → суммирует числовое поле в массиве объектов.
+
+_.maxBy(array, 'field') → находит объект с максимальным значением поля.
+
+2️⃣ Mongoose & MongoDB
+
+ObjectId → уникальный идентификатор документа, можно хранить в другом документе.
+
+populate('field') → заменяет ObjectId на полный документ из другой коллекции.
+
+Вложенные документы без _id → удобно для маленьких структур, но сложно ссылаться извне.
+
+{ new: true } при findByIdAndUpdate() → возвращает обновлённый документ. await Blog.findByIdAndUpdate(blog.id, updatedBlog, { new: true })
+3️⃣ Async/Await
+
+await можно использовать только внутри async функции.
+
+Ошибки промиса перехватываются через try/catch или, начиная с Express 5, автоматически попадают в middleware.
+
+Promise.all(array) → ждёт выполнения всех промисов одновременно, возвращает массив результатов.
+
+Последовательное выполнение промисов → через for...of с await внутри цикла.
+4️⃣ Тестирование (SuperTest + Node assert)
+
+.expect(200) / .expect(400) → проверка HTTP-статуса.
+
+.expect('Content-Type', /application\/json/) → проверка формата ответа.
+
+assert.strictEqual(a, b) → проверяет идентичность ссылок или примитивов.
+
+assert.deepStrictEqual(obj1, obj2) → проверяет содержимое объектов/массивов.
+
+nonExistingId() → создаёт ID, который точно не существует, для проверки 404.
+
+helper.notesInDb() / helper.personsInDb() → возвращает объекты из БД в формате JSON (.toJSON()), удобно для сравнения.
+
+```js
+const handleLikeChange = (delta) => {
+  const updatedBlog = {
+    ...blog,
+    likes: Math.max(0, blog.likes + delta) //
+  }
+// 2-version
+//   const newLikes = blog.likes + delta
+// const updatedBlog = {
+//   ...blog,
+//   likes: newLikes < 0 ? 0 : newLikes
+// }
+
+  blogService.update(blog.id, updatedBlog)
+    .then(returnedBlog => {
+      setBlog(returnedBlog)
+    })
+}
+ ```
+ `npm install bcrypt `
+
+```js
+const bcrypt = require('bcrypt')
+const usersRouter = require('express').Router()
+const User = require('./models/user')
+
+// Регулярка для проверки пароля:
+// минимум 8 символов, хотя бы одна заглавная, одна строчная, цифра и спецсимвол
+const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/
+
+// Регулярка для проверки email
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+usersRouter.post('/', async (req, res) => {
+  const { username, name, password } = req.body
+
+  // Проверка обязательных полей
+  if (!username || !password) {
+    return res.status(400).json({ error: 'username or password missing' })
+  }
+
+  // Проверка формата username/email
+  if (!emailRegex.test(username)) {
+    return res.status(400).json({ error: 'invalid username/email format' })
+  }
+
+  // Проверка сложности пароля
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({ 
+      error: 'password must be at least 8 characters, include uppercase, lowercase, number and special character' 
+    })
+  }
+
+  // Проверка уникальности username
+  const existingUser = await User.findOne({ username })
+  if (existingUser) {
+    return res.status(400).json({ error: 'username must be unique' })
+  }
+
+  // Генерация хэша пароля
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+
+  // Создание нового пользователя
+  const user = new User({
+    username,
+    name,
+    passwordHash
+  })
+
+  // Сохранение пользователя в базе и отправка ответа
+  const savedUser = await user.save()
+  res.status(201).json(savedUser)
+})
+
+module.exports = usersRouter
+
+
+```
+
+```js
+usersRouter.get('/', async (req, res) => {
+  const users = await User.find({}).populate('notes', { content: 1, important: 1 })
+  res.json(users)
+})
+```
+// { content: 1, important: 1 }
+* 1 → включить это поле
+
+* 0 → исключить это поле

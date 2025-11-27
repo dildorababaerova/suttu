@@ -1,5 +1,6 @@
 const personsRouter =require('express').Router()
 const Person = require('../models/person')
+const User = require('../models/user')
 
 
 // -------------------------
@@ -30,7 +31,7 @@ personsRouter.get('/info', async(req, res) => {
 
 // GET all
 personsRouter.get('/', async (req, res) => {
-  const persons = await Person.find({})
+  const persons = await Person.find({}).populate('persons', { name: 1, phoneNumber: 1 })
   res.json(persons)
 })
 
@@ -58,6 +59,10 @@ personsRouter.delete('/:id', async (req, res) => {
 // POST new person
 personsRouter.post('/',  async (req, res) => {
   const body = req.body
+  const user = await User.findById(body.userId)
+  if (!user) {
+    return res.status(400).json({ error:'userID missing or not valid' })
+  }
 
   if (!body.name || !body.phoneNumber) {
     return res.status(400).json({ error: 'person name or number missing' })
@@ -72,10 +77,13 @@ personsRouter.post('/',  async (req, res) => {
   // Если уникальный — создаём новый документ
   const newPerson = new Person({
     name: body.name,
-    phoneNumber: body.phoneNumber
+    phoneNumber: body.phoneNumber,
+    user:user._id
   })
 
   const newPersonSaved = await newPerson.save()
+  user.persons = user.persons.concat(newPersonSaved._id)
+  await user.save()
   if (newPersonSaved) {
     res.status(201).json(newPersonSaved)
   }
