@@ -6,27 +6,35 @@ const initialBlogs =[
   url: 'www.shohista',
   likes: 1000000
   }, 
-  {title: 'New Blog',
-  author: 'Shohista',
-  url: 'www.shohista',
+  {title: 'Fitnes blog',
+  author: 'Fifi',
+  url: 'www.finland.fi',
   likes: 1777777
 }
 ]
 
 const nonExistingId = async () => {
-  const blog = new Blog({ 
-    title: 'willremovethissoon',
-    author: 'fanni',
-    url: 'www.rrrrr',
-    likes: 333333
+  try {
+    const blog = new Blog({ 
+      title: 'willremovethissoon',
+      author: 'fanni',
+      url: 'www.rrrrr',
+      likes: 333333
+    })
 
+    await blog.save()
 
-})
-  await blog.save()
-  await blog.deleteOne()
+    const blogId = blog._id.toString()
+    console.log('INVALID_ID', blogId)
 
-  return blog._id.toString()
+    await blog.deleteOne()
+
+    return blogId
+  } catch (error) {
+    console.log('ERROR:', error)
+  }
 }
+nonExistingId().then(id => console.log('INVALID_ID', id))
 
 const blogInDb = async () => {
   const blogs = await Blog.find({})
