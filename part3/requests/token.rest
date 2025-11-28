@@ -14,3 +14,15 @@ Content-Type: application/json
     "username": "root",
     "password": "salainen"
 }
+
+###
+
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5MjgwZTQ3MTFjZWVjYjI5NGZlMmFlMSIsImlhdCI6MTc2NDMyNzYwMH0.zKAMTVy_A4kOEpyvnKNrybcl0bsDymMERKl60mnN6Pw
+
+{
+    "name": "fanny",
+    "phoneNumber": "771-5656564"
+}

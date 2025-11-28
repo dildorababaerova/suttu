@@ -1,6 +1,7 @@
 const personsRouter =require('express').Router()
 const Person = require('../models/person')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 
 // -------------------------
@@ -20,6 +21,8 @@ const User = require('../models/user')
 // -------------------------
 
 
+
+
 personsRouter.get('/info', async(req, res) => {
   const now = new Date()
   const personCount = await Person.countDocuments({})
@@ -31,7 +34,7 @@ personsRouter.get('/info', async(req, res) => {
 
 // GET all
 personsRouter.get('/', async (req, res) => {
-  const persons = await Person.find({}).populate('user', {name:1})
+  const persons = await Person.find({}).populate('user', { name:1 })
   res.json(persons)
 })
 
@@ -55,11 +58,26 @@ personsRouter.delete('/:id', async (req, res) => {
   }
 })
 
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if(authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
+
+
 
 // POST new person
 personsRouter.post('/',  async (req, res) => {
   const body = req.body
-  const user = await User.findById(body.userId)
+
+  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET)
+  if(!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
   if (!user) {
     return res.status(400).json({ error:'userID missing or not valid' })
   }

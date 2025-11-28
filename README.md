@@ -214,3 +214,16 @@ usersRouter.get('/', async (req, res) => {
 * 0 → исключить это поле
 
 `npm install jsonwebtoken`
+Создай тестовый файл, например test-env.js:
+```js
+require('dotenv').config(); // загружаем .env
+
+console.log('SECRET:', process.env.SECRET);
+
+```
+`node test-env.js` 
+
+Authorization: <scheme> <credentials>
+* <scheme> — это схема аутентификации (например, Bearer, Basic, Digest и т.д.)
+
+* <credentials> — сам токен или закодированные данные для аутентификации
