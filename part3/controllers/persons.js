@@ -31,7 +31,7 @@ personsRouter.get('/info', async(req, res) => {
 
 // GET all
 personsRouter.get('/', async (req, res) => {
-  const persons = await Person.find({}).populate('persons', { name: 1, phoneNumber: 1 })
+  const persons = await Person.find({}).populate('user', {name:1})
   res.json(persons)
 })
 

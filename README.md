@@ -212,3 +212,5 @@ usersRouter.get('/', async (req, res) => {
 * 1 → включить это поле
 
 * 0 → исключить это поле
+
+`npm install jsonwebtoken`
