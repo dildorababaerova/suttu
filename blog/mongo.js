@@ -12,7 +12,7 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url)
 
 const blogSchema = new mongoose.Schema({
- title: String,
+  title: String,
   author: String,
   url: String,
   likes: Number,
@@ -21,7 +21,7 @@ const blogSchema = new mongoose.Schema({
 const Blog = mongoose.model('Blog', blogSchema)
 
 
-  // If only password provided, list all blogs
+// If only password provided, list all blogs
 if (process.argv.length === 3) {
   Blog.find({}).then(blogs => {
     console.log('blogs:')
@@ -30,7 +30,7 @@ if (process.argv.length === 3) {
     })
     mongoose.connection.close()
   })
-} 
+}
 // If all arguments provided, add new blog
 else if (process.argv.length === 7) {
   const blog = new Blog({
