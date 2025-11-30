@@ -18,7 +18,6 @@ describe('when there is initially one user in db', () => {
       username: 'root',
       name: 'Salainen',
       passwordHash,
-      userId: '69280e4711ceecb294fe2ae1'
     })
 
     await user.save()
@@ -30,8 +29,7 @@ describe('when there is initially one user in db', () => {
     const newUser = {
       username: 'mluukkai',
       name: 'Matti Luukkainen',
-      password: 'salainen',
-      userId:'69280e7d11ceecb294fe2ae3',
+      password: 'salainen'
     }
 
     await api
@@ -53,7 +51,6 @@ describe('when there is initially one user in db', () => {
       username: 'root',
       name: 'Superuser',
       password: 'salainen',
-      userId:'69280e4711ceecb294fe2ae1'
     }
 
     const result = await api
@@ -72,10 +69,9 @@ describe('when there is initially one user in db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'rot',
+      username: 'ro',
       name: 'Superuser',
       password: 'sala',
-      userId:'69280e4711ceecb294fe2ae1'
     }
 
     const result = await api
@@ -89,7 +85,7 @@ describe('when there is initially one user in db', () => {
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
-})
+ })
 
 after(async () => {
   await mongoose.connection.close()

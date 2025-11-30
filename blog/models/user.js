@@ -8,7 +8,11 @@ const userSchema = new mongoose.Schema({
     unique: true,
   },
   name: String,
-  passwordHash: String,
+  passwordHash: {
+    type: String,
+    minLength:[3, 'Password must be at least 3 characters long'],
+    required:true,
+  },
   blogs: [
     {
       type: mongoose.Schema.Types.ObjectId,

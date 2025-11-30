@@ -16,3 +16,13 @@ Content-Type: application/json
     "name": "Matti Luukkainen",
     "password": "secret"
 }
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "didi",
+    "name": "Didi B",
+    "password": "react"
+}
