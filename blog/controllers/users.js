@@ -11,8 +11,8 @@ usersRouter.post('/', async (request, response) => {
 
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
-  if(!passwordHash) {
-    return response.status(401).json({ error:'password missed' })
+  if(!passwordHash || passwordHash<4) {
+    return response.status(401).json({ error:'password missed or must be at least 3 characters' })
   }
   const user = new User({
     username,
