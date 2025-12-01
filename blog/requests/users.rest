@@ -66,3 +66,26 @@ Content-Type: application/json
     "username": "root",
     "password": "salainen"
 }
+
+###
+POST http://localhost:3003/api/blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDU3OTgxMiwiZXhwIjoxNzY0NTgzNDEyfQ.7u8Q1X68ZP2-opQxTzIHDmF_7glu6rUQnM-uWgGWHR4
+Content-Type: application/json
+
+{
+    "title":"With token",
+    "author":"XXXXX",
+    "url": "www.secret.com",
+    "likes":27299222
+}
+###
+POST http://localhost:3003/api/blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDU3OTk5MSwiZXhwIjoxNzY0NTgzNTkxfQ.S8QZpQMRl8AISHqAKiCZxKP0BzXIs1q1GZVVHgVvbK0
+Content-Type: application/json
+
+{
+    "title":"With token test2",
+    "author":"root2",
+    "url": "www.rootrr.com",
+    "likes":767673
+}
