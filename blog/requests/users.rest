@@ -26,3 +26,43 @@ Content-Type: application/json
     "name": "Didi B",
     "password": "react"
 }
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"mimim",
+    "author":"Salainen",
+    "url": "www.mluukkai.fi",
+    "likes":5555,
+    "userId": "69299b54d5ba667b5578689d"
+}
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"gagaagag",
+    "author":"Matti Luukkainen",
+    "url": "www.secret.com",
+    "likes":27299999,
+    "userId": "69299b93d5ba667b5578689f"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "mluukkai",
+    "password": "secret"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "salainen"
+}
