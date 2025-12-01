@@ -1,4 +1,6 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
 
 const requestLogger = (req, res, next) => {
   logger.info('Method:', req.method)
@@ -9,6 +11,7 @@ const requestLogger = (req, res, next) => {
 }
 
 
+
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
@@ -16,6 +19,26 @@ const tokenExtractor = (req, res, next) => {
   } else {
     req.token=null
   }
+  next()
+}
+
+const userExtractor = async (req, res, next) => {
+  const token = req.token
+  if (!token) {
+    req.user = null
+    return next()
+  }
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+  if (!user) {
+    return res.status(401).json({ error: 'user not found' })
+  }
+  req.user = user
+  console.log('MIDDLEWARE USER', req.user)
   next()
 }
 
@@ -38,8 +61,7 @@ const errorHandler =(error, req, res, next) => {
     return res.status(401).json({ error: 'token invalid' })
   } else if (error.name === 'TokenExpiredError') {
     return res.status(401).json({
-      error: 'token expired'
-    })
+      error: 'token expired' })
   }
   res.status(500).json({ error:'something went wrong' })
 
@@ -49,5 +71,6 @@ module.exports ={
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor
 }

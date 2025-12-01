@@ -69,14 +69,14 @@ Content-Type: application/json
 
 ###
 POST http://localhost:3003/api/blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDU3OTgxMiwiZXhwIjoxNzY0NTgzNDEyfQ.7u8Q1X68ZP2-opQxTzIHDmF_7glu6rUQnM-uWgGWHR4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ1OTQ1MjIsImV4cCI6MTc2NDU5ODEyMn0.Lyz6FrgRrvtWQ9UyVGfql206Zp7TVxhK5Akc99nskdA
 Content-Type: application/json
 
 {
-    "title":"With token",
-    "author":"XXXXX",
-    "url": "www.secret.com",
-    "likes":27299222
+    "title":"With token test",
+    "author":"mlukkai",
+    "url": "www.mlik.com",
+    "likes":4545454
 }
 ###
 POST http://localhost:3003/api/blogs
@@ -89,3 +89,15 @@ Content-Type: application/json
     "url": "www.rootrr.com",
     "likes":767673
 }
+###
+DELETE http://localhost:3003/api/blogs/692d615f3dad0a78e2c515b6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDU4ODQyNiwiZXhwIjoxNzY0NTkyMDI2fQ.2QZgJZZO_rfMFOA-pvyYOtxFBVCJJOIblPL05NVSu3E
+Content-Type: application/json
+
+
+###
+DELETE http://localhost:3003/api/blogs/692d93c8e198d34516ab10f9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ1OTQ1MjIsImV4cCI6MTc2NDU5ODEyMn0.Lyz6FrgRrvtWQ9UyVGfql206Zp7TVxhK5Akc99nskdA
+
+
+
