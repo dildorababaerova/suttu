@@ -69,18 +69,23 @@ Content-Type: application/json
 
 ###
 POST http://localhost:3003/api/blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ1OTQ1MjIsImV4cCI6MTc2NDU5ODEyMn0.Lyz6FrgRrvtWQ9UyVGfql206Zp7TVxhK5Akc99nskdA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ2NjQ4NzYsImV4cCI6MTc2NDY2ODQ3Nn0._sKswF75njvNG0nBxW1RBsDMl-dGR2FEI_5ZY88i85Q
 Content-Type: application/json
 
 {
-    "title":"With token test",
+    "title":"With token test6",
     "author":"mlukkai",
     "url": "www.mlik.com",
     "likes":4545454
 }
 ###
+DELETE http://localhost:3003/api/blogs/692d50b1dfdee13863fb018c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ2NjQ4NzYsImV4cCI6MTc2NDY2ODQ3Nn0._sKswF75njvNG0nBxW1RBsDMl-dGR2FEI_5ZY88i85Q
+
+
+###
 POST http://localhost:3003/api/blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDU3OTk5MSwiZXhwIjoxNzY0NTgzNTkxfQ.S8QZpQMRl8AISHqAKiCZxKP0BzXIs1q1GZVVHgVvbK0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDY3NTY0MywiZXhwIjoxNzY0Njc5MjQzfQ.xjyQqGFByARv59XKklPAFKNkoSZwftwkwr2h0kXMZPw
 Content-Type: application/json
 
 {
@@ -90,14 +95,8 @@ Content-Type: application/json
     "likes":767673
 }
 ###
-DELETE http://localhost:3003/api/blogs/692d615f3dad0a78e2c515b6
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDU4ODQyNiwiZXhwIjoxNzY0NTkyMDI2fQ.2QZgJZZO_rfMFOA-pvyYOtxFBVCJJOIblPL05NVSu3E
-Content-Type: application/json
-
-
-###
-DELETE http://localhost:3003/api/blogs/692d93c8e198d34516ab10f9
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ1OTQ1MjIsImV4cCI6MTc2NDU5ODEyMn0.Lyz6FrgRrvtWQ9UyVGfql206Zp7TVxhK5Akc99nskdA
+DELETE http://localhost:3003/api/blogs/692ed05de4625b58c8c1c6ad
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDY3NTY0MywiZXhwIjoxNzY0Njc5MjQzfQ.xjyQqGFByARv59XKklPAFKNkoSZwftwkwr2h0kXMZPw
 
 
 
