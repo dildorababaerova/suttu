@@ -60,6 +60,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:3003/api/login
+
 Content-Type: application/json
 
 {
@@ -85,18 +86,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sd
 
 ###
 POST http://localhost:3003/api/blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDY3NTY0MywiZXhwIjoxNzY0Njc5MjQzfQ.xjyQqGFByARv59XKklPAFKNkoSZwftwkwr2h0kXMZPw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ3NTI0MTAsImV4cCI6MTc2NDc1NjAxMH0.6zsJRsKCIe6L9IoSWMWVAJoQ_R8m7SAEGT_YjJXbcJk
 Content-Type: application/json
 
 {
-    "title":"With token test2",
-    "author":"root2",
-    "url": "www.rootrr.com",
-    "likes":767673
+    "title":"With token test77",
+    "author":"mluukkai",
+    "url": "www.mluuk.com",
+    "likes":7676721
 }
 ###
-DELETE http://localhost:3003/api/blogs/692ed05de4625b58c8c1c6ad
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5Mjk5YjU0ZDViYTY2N2I1NTc4Njg5ZCIsImlhdCI6MTc2NDY3NTY0MywiZXhwIjoxNzY0Njc5MjQzfQ.xjyQqGFByARv59XKklPAFKNkoSZwftwkwr2h0kXMZPw
+DELETE http://localhost:3003/api/blogs/692ffc7b6f30bfb84d91632f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI5OWI5M2Q1YmE2NjdiNTU3ODY4OWYiLCJpYXQiOjE3NjQ3NTI0MTAsImV4cCI6MTc2NDc1NjAxMH0.6zsJRsKCIe6L9IoSWMWVAJoQ_R8m7SAEGT_YjJXbcJk
 
 
 

@@ -88,6 +88,7 @@ blogsRouter.post('/', async (req, res) => {
     return res.status(400).json({ error: 'blog title or author missing' })
   }
 
+
   const newBlog = new Blog({
     title:body.title,
     author:body.author,
@@ -100,6 +101,43 @@ blogsRouter.post('/', async (req, res) => {
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
   res.status(201).json(savedBlog)
+})
+
+blogsRouter.put('/:id', async (req, res) => {
+  const user = req.user
+  if(!user) {
+    return res._construct(401).json({ error: 'token missing or invalid for update' })
+  }
+  const blog = await Blog.findById(req.params.id)
+  if (!blog) {
+    return res.status(404).json({ error: 'Blog for update not found' })
+  }
+
+  if (blog.user.toString() !== user._id.toString()) {
+    return res.status(403).json({ error: 'only creator can update the blog' })
+  }
+
+  const body= req.body
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    req.params.id,
+    {
+      title:body.title,
+      author:body.author,
+      url: body.url,
+      likes:body.likes
+    },
+    {
+      new:true,
+      runValidators:true,
+      context: 'query'
+    }
+  )
+  if (!updatedBlog) {
+    return res.status(404).json({ error: 'updated blog not found' })
+  }
+
+  res.status(200).json(updatedBlog)
+
 })
 
 module.exports = blogsRouter

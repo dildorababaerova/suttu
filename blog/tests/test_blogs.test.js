@@ -6,8 +6,6 @@ const app = require('../app')
 const helper = require('./test_helper')
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
-
 
 const api = supertest(app)
 
@@ -152,6 +150,81 @@ describe('when there is initially some blogs saved', () => {
         .send(newBlog)
         .expect(401)
         .expect('Content-Type', /application\/json/)
+    })
+
+    test('update blog with valid id and token', async () => {
+      // Сначала создаем блог с токеном
+      const newBlog = {
+        title: 'Blog to update',
+        author: 'Author',
+        url: 'http://update.com',
+        likes: 0
+      }
+
+      const loginResponse = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'sekret' })
+      const token = loginResponse.body.token
+
+      const createdBlog = await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+
+      // Обновляем блог
+      const updatedData = {
+        title: 'Updated title',
+        author: 'Updated author',
+        url: 'http://updated.com',
+        likes: 100
+      }
+
+      await api
+        .put(`/api/blogs/${createdBlog.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(updatedData)
+        .expect(200)
+
+      // Проверяем, что блог обновился
+      const updatedBlog = await Blog.findById(createdBlog.body.id)
+      assert.strictEqual(updatedBlog.title, 'Updated title')
+    })
+    test('update blog with valid id and token updated only title', async () => {
+      // Сначала создаем блог с токеном
+      const newBlog = {
+        title: 'Blog to update',
+        author: 'Author',
+        url: 'http://update.com',
+        likes: 0
+      }
+
+      const loginResponse = await api
+        .post('/api/login')
+        .send({ username: 'root', password: 'sekret' })
+      const token = loginResponse.body.token
+
+      const createdBlog = await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+
+      // Обновляем блог
+      const updatedData = {
+        title: 'Updated title',
+        author: 'Author',
+        url: 'http://update.com',
+        likes: 0
+      }
+
+      await api
+        .put(`/api/blogs/${createdBlog.body.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send(updatedData)
+        .expect(200)
+
+      // Проверяем, что блог обновился
+      const updatedBlog = await Blog.findById(createdBlog.body.id)
+      assert.strictEqual(updatedBlog.title, 'Updated title')
     })
     //   test('fails with status code 400 if data invalid', async () => {
     //     const newBlog = { author: 'jojo' }

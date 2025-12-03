@@ -20,14 +20,14 @@ Content-Type: application/json
 
 POST http://localhost:3001/api/persons
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI4MGU3ZDExY2VlY2IyOTRmZTJhZTMiLCJpYXQiOjE3NjQ2NzMwMDcsImV4cCI6MTc2NDY3NjYwN30.oEOwpOcbU9H7bgu_RAjp_79UlsgQozmQIrXTmClKiek
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI4MGU3ZDExY2VlY2IyOTRmZTJhZTMiLCJpYXQiOjE3NjQ3NTM2MzEsImV4cCI6MTc2NDc1NzIzMX0.Y-4dU32s1Nfza-Vngn8CxVNKh5q6ygW8LqJn7_xHxHs
 
 {
-    "name": "fanny3",
-    "phoneNumber": "771-5656564331"
+    "name": "fanny4",
+    "phoneNumber": "771-12345678"
 }
 
 ###
-DELETE http://localhost:3001/api/persons/692ec6aab944ca5b2bdd2b83
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI4MGU3ZDExY2VlY2IyOTRmZTJhZTMiLCJpYXQiOjE3NjQ2NzMwMDcsImV4cCI6MTc2NDY3NjYwN30.oEOwpOcbU9H7bgu_RAjp_79UlsgQozmQIrXTmClKiek
+DELETE http://localhost:3001/api/persons/69300523d0caf992dc2f0762
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI2OTI4MGU3ZDExY2VlY2IyOTRmZTJhZTMiLCJpYXQiOjE3NjQ3NTM2MzEsImV4cCI6MTc2NDc1NzIzMX0.Y-4dU32s1Nfza-Vngn8CxVNKh5q6ygW8LqJn7_xHxHs
 
