@@ -10,8 +10,6 @@ const App = () => {
   const [blogUrl, setBlogUrl] = useState('')
   const [blogLikes, setBlogLikes] = useState('') // теперь как строка
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] =useState('')
-  const [password, setPassword] =useState('')
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
@@ -54,39 +52,11 @@ const App = () => {
   const handleAuthorChange = (event) => setBlogAuthor(event.target.value)
   const handleUrlChange = (event) => setBlogUrl(event.target.value)
   const handleLikesChange = (event) => setBlogLikes(event.target.value)
-  const handleLogin = (event) => {
-    event.preventDefault()
-    console.log('logging in with', username, password)
-  }
 
   return (
     <div>
       <h1>Blogs</h1>
       <Notification message={errorMessage} />
-
-      <h2>Login</h2>
-      <form onSubmit = {handleLogin}>
-        <div>
-          <label>
-            username 
-            <input 
-            type='text'
-            value={username}
-            onChange={({target})=> setUsername(target.value) }
-            />
-          </label>
-          <label>
-            password
-            <input 
-            type='password'
-            value={password}
-            onChange={({target})=> setPassword(target.value) }
-            />
-          </label>
-        </div>
-        <button type='submit'>login</button>
-      </form>
-      
       
       <ul>
         {blogs.map(blog => (
