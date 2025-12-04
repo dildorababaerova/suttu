@@ -1,6 +1,10 @@
 import axios from 'axios'
 
 const baseUrl= '/api/persons'
+let token =null
+const setToken = newToken => {
+    token = `Bearer ${newToken}`
+}
 
 const getAll = () => {
     const requestServer = axios.get(baseUrl)
@@ -8,7 +12,10 @@ const getAll = () => {
 }
 
 const create = (newObject) => {
-    const requestServer = axios.post(baseUrl, newObject)
+    const config = {
+        headers: {Authorization:token}
+    }
+    const requestServer = axios.post(baseUrl, newObject, config)
     return requestServer.then(response =>response.data)
 }
 const update = (id, updateNote) => {
@@ -22,4 +29,4 @@ const deletePerson= (id)=> {
 }
 
 
-export default {getAll, create, update, deletePerson}
+export default {getAll, create, update, deletePerson, setToken}

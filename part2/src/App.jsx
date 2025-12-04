@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import Persons from './components/Persons'
-import Filter from './components/Filter'
-import PersonForm from './components/PersonForm'
 import personService from './services/persons'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+
 
 
 const App = () => {
@@ -84,7 +86,7 @@ const App = () => {
     personService
     .deletePerson(id)
     .then(() => {
-      setPersons(persons.filter(person => person.id != id))
+      setPersons(persons.filter(person => person.id !== id))
       setSuccessMessage(`${person.name} deleted`)
       setTimeout(()=>{
         setSuccessMessage(null)
@@ -113,15 +115,27 @@ const App = () => {
     setPhoneNumber(e.target.value)
   }
 
+  const handleUsername = ({target}) => {
+    setUsername(target.value)
+  }
+  const handlePassword = ({target}) => {
+    setPassword(target.value)
+  }
+
 
    const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({username, password}) 
+      const user = await loginService.login({username, password})
+      window.localStorage.setItem(
+        'loggedpersonAppUser', JSON.stringify(user)
+      ) 
+      window.localStorage.removeItem('loggedNoteappUser')
+      personService.setToken(user.token) 
       setUser(user)
       setUsername('')
       setPassword('')
-      setSuccessMessage(`Logged with user ${user.username.toString()}`)
+      setSuccessMessage(`Logged with user ${user.username}`)
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000) 
@@ -133,34 +147,14 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (
-      <form onSubmit = {handleLogin}>
-        <div>
-          <label>
-            username 
-            <input 
-            type='text'
-            value={username}
-            onChange={({target})=> setUsername(target.value) }
-            />
-          </label>
-          <br />
-          <label>
-            password
-            <input 
-            type='password'
-            value={password}
-            onChange={({target})=> setPassword(target.value) }
-            />
-          </label>
-        </div>
-        <button type='submit'>login</button>
-      </form>
-  )
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <Notification successMessage={successMessage} errorMessage={errorMessage}/>
 
-  const phoneBookContent = () => (
-    <div> 
-         <p>{user.name} logged in</p>
+      { user? 
+      <div>
+       <p>{user.name} logged in</p>
           <Filter 
           handleSearch={handleSearch} 
           searchName={searchName}
@@ -177,19 +171,20 @@ const App = () => {
         
       <h2>Numbers</h2>
        < Persons 
-        persons ={persons} 
-        searchName={searchName}
-        toggleDeleteOf={toggleDeleteOf}
+        persons = {persons} 
+        searchName = {searchName}
+        toggleDeleteOf = {toggleDeleteOf}
         />
-       </div> 
-  )
+        </div>
+      :<LoginForm 
+      handleLogin = {handleLogin}
+      handleUsername = {handleUsername} 
+      handlePassword = {handlePassword} 
+      username = {username} 
+      password = {password}
 
-  return (
-    <div>
-      <h2>Phonebook</h2>
-      <Notification successMessage={successMessage} errorMessage={errorMessage}/>
-
-      { user? phoneBookContent():loginForm()}
+      />
+      }
       
       
     </div>
