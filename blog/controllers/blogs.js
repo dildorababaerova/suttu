@@ -77,6 +77,8 @@ blogsRouter.delete('/:id', async (req, res) => {
     res.status(500).json({ error: 'server error during deletion' })
   }
 })
+
+
 blogsRouter.post('/', async (req, res) => {
   const body = req.body
   const user = req.user
@@ -98,7 +100,7 @@ blogsRouter.post('/', async (req, res) => {
   })
 
   const savedBlog = await newBlog.save()
-  user.blogs = user.blogs.concat(savedBlog._id)
+  user.blogs = user.blogs.push(savedBlog._id)
   await user.save()
   res.status(201).json(savedBlog)
 })
