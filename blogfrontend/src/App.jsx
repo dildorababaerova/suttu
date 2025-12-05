@@ -13,14 +13,24 @@ const App = () => {
   const [blogUrl, setBlogUrl] = useState('')
   const [blogLikes, setBlogLikes] = useState('') // теперь как строка
   const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const[user, setUser] =useState('')
+  const[user, setUser] =useState(null)
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
       setBlogs(initialBlogs)
     })
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON= window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON) //because it parsed to string for window localeStorage(DOM)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
   }, [])
 
   const addBlog = event => {
@@ -29,15 +39,15 @@ const App = () => {
       title: blogTitle,
       author: blogAuthor,
       url: blogUrl,
-      likes: Number(blogLikes), // преобразуем строку в число
+      likes: Number(blogLikes) || 0 // преобразуем строку в число
     }
 
     blogService.create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setErrorMessage(`${blogObject.title} added` )
+        setSuccessMessage(`${blogObject.title} added` )
         setTimeout(()=>{
-          setErrorMessage(null)
+          setSuccessMessage(null)
         }, 5000)
         setBlogTitle('')
         setBlogAuthor('')
@@ -57,6 +67,10 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({username, password})
+      window.localStorage.setItem(
+        'loggedBlogAppUser', JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -68,6 +82,12 @@ const App = () => {
     }
 
   }
+
+  const handleLogout = () => {
+  window.localStorage.removeItem('loggedBlogAppUser')
+  setUser(null)
+}
+  
 
 
   // Обработчики изменений для каждого поля
@@ -81,11 +101,18 @@ const App = () => {
   return (
     <div>
       <h1>Blogs</h1>
-      <Notification message={errorMessage} />
-      {user? (
+      <Notification successMessage={successMessage} errorMessage={errorMessage} />
+      {user === null?
+      <LoginForm 
+      handleLogin={handleLogin}
+      handleUsername={handleUsername}
+      handlePassword={handlePassword}
+      />
+      : (
         <div>
+            <p>{user.name} logged in</p>
+            <button onClick={handleLogout}>logout</button>
           <ul>
-            <p>{user.name} logged in    </p>
           {blogs.map(blog => (
             <Blog
               key={blog.id}
@@ -95,23 +122,18 @@ const App = () => {
         </ul>
         <AddBlog 
         addBlog={addBlog}
+        blogTitle={blogTitle}
         handleTitleChange={handleTitleChange}
+        blogAuthor={blogAuthor}
         handleAuthorChange={handleAuthorChange}
+        blogUrl={blogUrl}
         handleUrlChange={handleUrlChange}
+        blogLikes={blogLikes}
         handleLikesChange={handleLikesChange}
         /> 
-        </div>)
-        :
-        <LoginForm 
-        handleLogin={handleLogin}
-        handleUsername={handleUsername}
-        handlePassword={handlePassword}
-        />
-      }
-      
-     
+        </div> 
+      )}
     </div>
-  )
-}
+  )}
 
 export default App

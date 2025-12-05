@@ -100,7 +100,7 @@ blogsRouter.post('/', async (req, res) => {
   })
 
   const savedBlog = await newBlog.save()
-  user.blogs = user.blogs.push(savedBlog._id)
+  user.blogs.push(savedBlog._id)
   await user.save()
   res.status(201).json(savedBlog)
 })
