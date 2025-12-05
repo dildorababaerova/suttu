@@ -227,3 +227,217 @@ Authorization: <scheme> <credentials>
 * <scheme> — это схема аутентификации (например, Bearer, Basic, Digest и т.д.)
 
 * <credentials> — сам токен или закодированные данные для аутентификации
+
+
+
+
+###tulavaisuuden projekti
+
+model Task {
+  id Int @id @default(autoincrement())
+  title String
+  description String?
+  status String @default("todo")
+  createdAt DateTime @default(now())
+
+  // "takaisinkytkentä"-relaatio, prisma tarvitsee
+  orders      Order[]
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  authLevel Int @default(0)
+}
+
+model Order {
+  id       Int    @id @default(autoincrement())
+  orderno  String @unique
+  taskId   Int
+  email    String
+  paid     Boolean @default(false)
+  cancelled Boolean @default(false)
+  authcode String?
+
+  task     Task @relation(fields: [taskId], references: [id])
+}
+
+Lisätään myös pari uutta tiedostoa backendiin sekä tuon utils-kansion jos ei vielä tehty:
+
+routes/payments.js
+utils/vismapay.js 
+
+vismapay.js sisältö:
+
+```js
+const crypto = require('crypto');
+ 
+function generateOrderValidation(validation, secretKey) {
+  return crypto
+    .createHmac('sha256', secretKey)
+    .update(validation)
+    .digest('hex')
+    .toUpperCase();
+}
+ 
+function generateCheckoutAuth(apiKey, orderNumber, secretKey) {
+  const msg = `${apiKey}|${orderNumber}`;
+  return crypto
+    .createHmac('sha256', secretKey)
+    .update(msg)
+    .digest('hex')
+    .toUpperCase();
+}
+ 
+module.exports = { generateOrderValidation, generateCheckoutAuth };
+
+```
+//Djangon tapauksessa välitykset eteenpäin tulivat toki Djangolle itselleen, mutta tämän projektin yhteydessä meillä on erillinen frontend, joten onnistuneen maksutapahtuman päätteeksi res.redirect ohjaa käyttäjän takaisin frontendin puolelle.
+
+```js
+onst express = require('express');
+const router = express.Router();
+const axios = require('axios');
+const { PrismaClient } = require('@prisma/client');
+const authorize = require('../middleware/auth');
+const prisma = new PrismaClient();
+const {
+  generateOrderValidation,
+  generateCheckoutAuth
+} = require('../utils/vismapay');
+ 
+const API_KEY = process.env.VISMAPAY_API_KEY;
+const PRIVATE_KEY = process.env.VISMAPAY_PRIVATE_KEY;
+const BASE_URL = 'http://localhost:3000'; 
+ 
+router.post('/create/:taskId', authorize(0), async (req, res) => {
+  try {
+    const taskId = parseInt(req.params.taskId);
+ 
+    const task = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+    const orderno = `order-${Math.floor(Math.random() * 1000000)}`;
+    const signature = generateCheckoutAuth(API_KEY, orderno, PRIVATE_KEY);
+ 
+    // Luodaan uusi tilaus tietokantaan
+    const order = await prisma.order.create({
+      data: {
+        orderno,
+        taskId: task.id,
+        email: 'customer@example.com', // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+        paid: false,
+        authcode: signature
+      }
+    });
+ 
+    const payload = {
+      version: 'w3.2',
+      api_key: API_KEY,
+      order_number: orderno,
+      amount: 620,      // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+      currency: 'EUR',
+      email: order.email,
+      payment_method: {
+        type: 'e-payment',
+        return_url: `${BASE_URL}/payments/success`,
+        notify_url: `${BASE_URL}/payments/notify`,
+        lang: 'fi',
+        token_valid_until: '1442403776'
+      },
+      authcode: signature,
+      customer: {
+        firstname: 'Test', // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+        lastname: 'Customer', // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+        email: order.email, // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+        address_street: 'Street 1', // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+        address_city: 'City', // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+        address_zip: '00100' // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+      },
+      products: [
+        {
+          id: task.id,
+          title: task.title,
+          count: 1, // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat frontendin puolelta "validia" tietoa
+          pretax_price: 500, // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat tämän tiedon lisättyä tietokantaan ja luettua sen tässä kohtaa sieltä
+          tax: 24,  // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat tämän tiedon lisättyä tietokantaan ja luettua sen tässä kohtaa sieltä
+          price: 620, // TODO: KIINTEÄ ARVO: Keksi tähän ratkaisu miten saat tämän tiedon lisättyä tietokantaan ja luettua sen tässä kohtaa sieltä
+          type: 1
+        }
+      ]
+    };
+ 
+    const response = await axios.post(
+      'https://www.vismapay.com/pbwapi/auth_payment',
+      payload,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    const target = `https://www.vismapay.com/pbwapi/token/${response.data.token}`;
+ 
+    res.json({ checkout_url: target });
+ 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Virhe maksutapahtumassa' });
+  }
+});
+ 
+//Ei käytetä tässä yhteydessä authorize koska vismapayn rajapinta forwardoi tänne jos maksu onnistuu
+router.get('/success',  async (req, res) => {
+  const returnCode = parseInt(req.query.RETURN_CODE);
+  const orderNumber = req.query.ORDER_NUMBER;
+  const auth = req.query.AUTHCODE;
+  const settled = req.query.SETTLED;
+ 
+  let status = 'failed';
+ 
+  //TODO: VismaPayn dokumentaatiossa: https://www.vismapay.com/docs/web_payments/?page=full-api-reference#payment-token-request
+  //Tässä käsitellään vain onnistuneet maksutapahtumat ja kaikki muut koodit ovat "cancelled". Pitäisikö käsitellä useammalla tavalla?
+  if (returnCode === 0) {
+    const expected = generateOrderValidation(
+      `${returnCode}|${orderNumber}|${settled}`,
+      PRIVATE_KEY
+    );
+ 
+    if (expected === auth) {
+      await prisma.order.update({
+        where: { orderno: orderNumber },
+        data: { paid: true }
+      });
+    }
+    status = 'success';    
+  }
+  else if (returnCode != 0)
+  {
+    await prisma.order.update({
+        where: { orderno: orderNumber },
+        data: { cancelled: true }
+      });
+    res.json('Maksutapahtuma peruuntui tai epäonnistui');
+    status = 'cancelled';
+  }
+  
+  // TODO: kiinteä polku tällä hetkellä, lisää tämä myös frontendin koodiin niin että se lähetään maksutapahtuman yhteydessä, 
+  // tallennetaan tietokantaan orders-tauluun ja luetaan se myös tässä kohtaa niin että palvelu ohjautuu edelleen oikeaan paikkaan
+  return res.redirect(
+    `http://localhost:5173/payment-result?status=${status}&order=${orderNumber}`
+  );
+});
+ 
+module.exports = router; 
+```
+
+
+
+```js
+const paymentRoutes = require('./routes/payments');
+app.use('/payments', paymentRoutes);
+```
+
+Testausta varten API-key:
+
+4753871c88c5c199350edfb8e157a5c3048ed
+Testausta varten private key:
+
+543f4e90dfd4055a68be225b190ba8b7
+ 

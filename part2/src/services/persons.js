@@ -28,5 +28,26 @@ const deletePerson= (id)=> {
     return requestServer.then(response =>response.data)
 }
 
+// const handlePurchase = async (id) => {
+//       const res = await axios.post(
+//         `http://localhost:3000/payments/create/${id}`,
+//         {},
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+ 
+//       const url = res.data.checkout_url;
+ 
+//       // Redirect user to VismaPay
+//       window.location.href = url;
+ 
+//   };
 
-export default {getAll, create, update, deletePerson, setToken}
+
+
+
+
+export default {getAll, create, update, deletePerson, setToken, handlePurchase}

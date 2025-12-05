@@ -7,6 +7,12 @@ const getAll = () => {
   return request.then(response => response.data)
 }*/
 
+let token = null
+
+const setToken = (newToken) => {
+  token = `Bearer ${}`
+}
+
 const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then((response) => response.data)

@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
+import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import AddBlog from './components/AddBlog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -10,6 +13,9 @@ const App = () => {
   const [blogUrl, setBlogUrl] = useState('')
   const [blogLikes, setBlogLikes] = useState('') // теперь как строка
   const [errorMessage, setErrorMessage] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const[user, setUser] =useState('')
 
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
@@ -47,44 +53,63 @@ const App = () => {
       })
   }
 
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({username, password})
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch {
+      setErrorMessage('wrong username or password')
+      setTimeout(() =>{
+        setErrorMessage(null)
+      }, 5000)
+    }
+
+  }
+
+
   // Обработчики изменений для каждого поля
   const handleTitleChange = (event) => setBlogTitle(event.target.value)
   const handleAuthorChange = (event) => setBlogAuthor(event.target.value)
   const handleUrlChange = (event) => setBlogUrl(event.target.value)
   const handleLikesChange = (event) => setBlogLikes(event.target.value)
+  const handleUsername = ({target}) => setUsername(target.value)
+  const handlePassword = ({target}) => setPassword(target.value)
 
   return (
     <div>
       <h1>Blogs</h1>
       <Notification message={errorMessage} />
+      {user? (
+        <div>
+          <ul>
+            <p>{user.name} logged in    </p>
+          {blogs.map(blog => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+            />
+          ))}
+        </ul>
+        <AddBlog 
+        addBlog={addBlog}
+        handleTitleChange={handleTitleChange}
+        handleAuthorChange={handleAuthorChange}
+        handleUrlChange={handleUrlChange}
+        handleLikesChange={handleLikesChange}
+        /> 
+        </div>)
+        :
+        <LoginForm 
+        handleLogin={handleLogin}
+        handleUsername={handleUsername}
+        handlePassword={handlePassword}
+        />
+      }
       
-      <ul>
-        {blogs.map(blog => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-          />
-        ))}
-      </ul>
-      <form onSubmit={addBlog}>
-        <div>
-          <label>Title:</label>
-          <input value={blogTitle} onChange={handleTitleChange} />
-        </div>
-        <div>
-          <label>Author:</label>
-          <input value={blogAuthor} onChange={handleAuthorChange} />
-        </div>
-        <div>
-          <label>URL:</label>
-          <input value={blogUrl} onChange={handleUrlChange} />
-        </div>
-        <div>
-          <label>Likes:</label>
-          <input value={blogLikes} onChange={handleLikesChange} />
-        </div>
-        <button type="submit">Add</button>
-      </form>
+     
     </div>
   )
 }
