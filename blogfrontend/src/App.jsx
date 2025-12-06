@@ -9,14 +9,8 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  // const [blogTitle, setBlogTitle] = useState('')
-  // const [blogAuthor, setBlogAuthor] = useState('')
-  // const [blogUrl, setBlogUrl] = useState('')
-  // const [blogLikes, setBlogLikes] = useState('') // теперь как строка
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const[user, setUser] =useState(null)
 
   useEffect(() => {
@@ -35,17 +29,9 @@ const App = () => {
   }, [])
 
   const addBlog = (blogObject) => {
-    // event.preventDefault()
-    // const blogObject = {
-    //   title: blogTitle,
-    //   author: blogAuthor,
-    //   url: blogUrl,
-    //   likes: Number(blogLikes) || 0 // преобразуем строку в число
-    // }
-
     blogService.create(blogObject)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        setBlogs(prevBlogs => prevBlogs.concat(returnedBlog))
         setSuccessMessage(`${blogObject.title} added` )
         setTimeout(()=>{
           setSuccessMessage(null)
@@ -67,17 +53,15 @@ const App = () => {
     </Togglable>
   )
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (credentials) => {
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login(credentials)
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      
     } catch {
       setErrorMessage('wrong username or password')
       setTimeout(() =>{
@@ -87,29 +71,27 @@ const App = () => {
 
   }
 
+  const loginForm =() =>(
+  <Togglable buttonLabel = 'login'>
+    <LoginForm 
+    handleLogForm={handleLogin}
+    />
+  </Togglable>
+  )
+
+
   const handleLogout = () => {
   window.localStorage.removeItem('loggedBlogAppUser')
   setUser(null)
 }
-  
-
-
-  // Обработчики изменений для каждого поля
-  
-  const handleUsername = ({target}) => setUsername(target.value)
-  const handlePassword = ({target}) => setPassword(target.value)
 
   return (
     <div>
       <Notification successMessage={successMessage} errorMessage={errorMessage} />
       {user === null?
-      <Togglable buttonLabel = 'login'>
-        <LoginForm 
-        handleLogin={handleLogin}
-        handleUsername={handleUsername}
-        handlePassword={handlePassword}
-        />
-        </Togglable>
+      <div>
+        {loginForm()}
+      </div>
       : (
         <div>
           <h1>Blogs</h1>
