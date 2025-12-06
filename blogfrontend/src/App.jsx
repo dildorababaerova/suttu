@@ -5,13 +5,14 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import AddBlog from './components/AddBlog'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
-  const [blogLikes, setBlogLikes] = useState('') // теперь как строка
+  // const [blogTitle, setBlogTitle] = useState('')
+  // const [blogAuthor, setBlogAuthor] = useState('')
+  // const [blogUrl, setBlogUrl] = useState('')
+  // const [blogLikes, setBlogLikes] = useState('') // теперь как строка
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [username, setUsername] = useState('')
@@ -33,14 +34,14 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = event => {
-    event.preventDefault()
-    const blogObject = {
-      title: blogTitle,
-      author: blogAuthor,
-      url: blogUrl,
-      likes: Number(blogLikes) || 0 // преобразуем строку в число
-    }
+  const addBlog = (blogObject) => {
+    // event.preventDefault()
+    // const blogObject = {
+    //   title: blogTitle,
+    //   author: blogAuthor,
+    //   url: blogUrl,
+    //   likes: Number(blogLikes) || 0 // преобразуем строку в число
+    // }
 
     blogService.create(blogObject)
       .then(returnedBlog => {
@@ -49,10 +50,7 @@ const App = () => {
         setTimeout(()=>{
           setSuccessMessage(null)
         }, 5000)
-        setBlogTitle('')
-        setBlogAuthor('')
-        setBlogUrl('')
-        setBlogLikes('')
+        
       })
       .catch(error => {
         // Обработка ошибки, например, показать сообщение об ошибке
@@ -62,6 +60,12 @@ const App = () => {
         }, 5000)
       })
   }
+
+  const blogForm = () => (
+    <Togglable buttonLabel = "add new blog" >
+      <AddBlog createBlog={addBlog} />
+    </Togglable>
+  )
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -91,28 +95,30 @@ const App = () => {
 
 
   // Обработчики изменений для каждого поля
-  const handleTitleChange = (event) => setBlogTitle(event.target.value)
-  const handleAuthorChange = (event) => setBlogAuthor(event.target.value)
-  const handleUrlChange = (event) => setBlogUrl(event.target.value)
-  const handleLikesChange = (event) => setBlogLikes(event.target.value)
+  
   const handleUsername = ({target}) => setUsername(target.value)
   const handlePassword = ({target}) => setPassword(target.value)
 
   return (
     <div>
-      <h1>Blogs</h1>
       <Notification successMessage={successMessage} errorMessage={errorMessage} />
       {user === null?
-      <LoginForm 
-      handleLogin={handleLogin}
-      handleUsername={handleUsername}
-      handlePassword={handlePassword}
-      />
+      <Togglable buttonLabel = 'login'>
+        <LoginForm 
+        handleLogin={handleLogin}
+        handleUsername={handleUsername}
+        handlePassword={handlePassword}
+        />
+        </Togglable>
       : (
         <div>
+          <h1>Blogs</h1>
             <p>{user.name} logged in</p>
             <button onClick={handleLogout}>logout</button>
-          <ul>
+            {blogForm()}
+        </div> 
+      )}
+       <ul>
           {blogs.map(blog => (
             <Blog
               key={blog.id}
@@ -120,19 +126,6 @@ const App = () => {
             />
           ))}
         </ul>
-        <AddBlog 
-        addBlog={addBlog}
-        blogTitle={blogTitle}
-        handleTitleChange={handleTitleChange}
-        blogAuthor={blogAuthor}
-        handleAuthorChange={handleAuthorChange}
-        blogUrl={blogUrl}
-        handleUrlChange={handleUrlChange}
-        blogLikes={blogLikes}
-        handleLikesChange={handleLikesChange}
-        /> 
-        </div> 
-      )}
     </div>
   )}
 
