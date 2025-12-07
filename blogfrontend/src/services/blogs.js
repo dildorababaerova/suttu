@@ -12,7 +12,7 @@ let token = null
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
-console.log("SET TOKEN",setToken)
+
 
 const getAll = async () => {
   const response = await axios.get(baseUrl)

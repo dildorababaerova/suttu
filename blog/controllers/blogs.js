@@ -39,15 +39,15 @@ blogsRouter.delete('/:id', async (req, res) => {
       return res.status(400).json({ error: 'blog has no owner information' })
     }
 
-    console.log('User from middleware:', user)
-    console.log('Blog found:', blog)
-    console.log('Blog ID:', blog.id)
-    console.log('Blog user ID type:', typeof blog.id)
-    console.log('Blog user ID:', blog.user)
-    console.log('Blog user ID type:', typeof blog.user)
-    console.log('Blog user ID toString:', blog.user.toString())
-    console.log('Current user ID:', user._id)
-    console.log('Current user ID toString:', user._id.toString())
+    // console.log('User from middleware:', user)
+    // console.log('Blog found:', blog)
+    // console.log('Blog ID:', blog.id)
+    // console.log('Blog user ID type:', typeof blog.id)
+    // console.log('Blog user ID:', blog.user)
+    // console.log('Blog user ID type:', typeof blog.user)
+    // console.log('Blog user ID toString:', blog.user.toString())
+    // console.log('Current user ID:', user._id)
+    // console.log('Current user ID toString:', user._id.toString())
 
     // СПОСОБ 1: Для ObjectId (рекомендуется)
     // Приводим оба значения к строке и сравниваем

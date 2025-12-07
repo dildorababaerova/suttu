@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -29,27 +29,29 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = (blogObject) => {
-    blogService.create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setSuccessMessage(`${blogObject.title} added` )
-        setTimeout(()=>{
-          setSuccessMessage(null)
-        }, 5000)
+  const blogFormRef = useRef()
+
+  const addBlog = async (blogObject) => {
+    try {
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(prev => [...prev, (returnedBlog)])
+      setSuccessMessage(`${blogObject.title} added` )
+      setTimeout(()=>{
+        setSuccessMessage(null)
+      }, 5000)
+      blogFormRef.current.toggleVisibility()
         
-      })
-      .catch(error => {
+      } catch (error) {
         // Обработка ошибки, например, показать сообщение об ошибке
         setErrorMessage('Error adding blog')
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-      })
+      }
   }
 
   const blogForm = () => (
-    <Togglable buttonLabel = "add new blog" >
+    <Togglable buttonLabel = "add new blog" ref={blogFormRef}>
       <AddBlog createBlog={addBlog} />
     </Togglable>
   )
@@ -102,10 +104,10 @@ const App = () => {
       )}
        <div className="blog-grid">
           {blogs.map(blog => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-            />
+              <Blog
+                key={blog.id}
+                blog={blog}
+              />
           ))}
         </div>
     </div>
