@@ -18,9 +18,10 @@ const LoginForm = ({handleLogForm}) => {
     const handleUsername = ({target}) => setUsername(target.value)
     const handlePassword = ({target}) => setPassword(target.value)
     return (
-    <div>
+    <div className="login-card">
         <h2>Login</h2>
-        <form onSubmit = {handleLogin}>
+        <form onSubmit = {handleLogin} className="login-form">
+            <div className="form-group" >
             <label>
                 username 
                 <input 
@@ -29,6 +30,9 @@ const LoginForm = ({handleLogForm}) => {
                 onChange = {handleUsername}
                 />
             </label>
+            </div>
+
+            <div className="form-group" >
             <label>
                 password 
                 <input 
@@ -37,7 +41,8 @@ const LoginForm = ({handleLogForm}) => {
                 onChange = {handlePassword}
                 />
             </label>
-            <button type="submit" >login</button>
+            </div>
+            <button type="submit" className="login-btn">login</button>
         </form>
     </div>
     )

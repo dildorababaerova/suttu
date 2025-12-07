@@ -66,3 +66,79 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 блога в ряд */
+  gap: 20px; /* расстояние между карточками */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+
+button {
+  margin: 10px; /* отступ между кнопками */
+}
+
+
+/* Карточка окружения */
+.login-card {
+  background-color: #f9f9f9;
+  padding: 24px;
+  border-radius: 12px;
+  width: 320px;
+  margin: 20px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+/* Форма в колонку */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Группа: label + input */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Поля ввода */
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #f9f9f9;
+  color: #213547;
+  margin-top: 6px;
+  font-size: 16px;
+}
+
+/* Чуть лучшее состояние фокуса */
+input:focus {
+  border-color: #646cff;
+  outline: none;
+}
+
+/* Кнопка */
+.login-btn {
+  padding: 12px;
+  background-color: #f9f9f9;
+  color: #213547;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+/* Ховер */
+.login-btn:hover {
+  background-color: #f9f9f9;
+}
+

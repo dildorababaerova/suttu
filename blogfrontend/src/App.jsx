@@ -6,6 +6,7 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
+import LogOut from './components/Logout'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -31,7 +32,7 @@ const App = () => {
   const addBlog = (blogObject) => {
     blogService.create(blogObject)
       .then(returnedBlog => {
-        setBlogs(prevBlogs => prevBlogs.concat(returnedBlog))
+        setBlogs(blogs.concat(returnedBlog))
         setSuccessMessage(`${blogObject.title} added` )
         setTimeout(()=>{
           setSuccessMessage(null)
@@ -79,7 +80,6 @@ const App = () => {
   </Togglable>
   )
 
-
   const handleLogout = () => {
   window.localStorage.removeItem('loggedBlogAppUser')
   setUser(null)
@@ -96,18 +96,18 @@ const App = () => {
         <div>
           <h1>Blogs</h1>
             <p>{user.name} logged in</p>
-            <button onClick={handleLogout}>logout</button>
+            <LogOut handleLogout= {handleLogout} />
             {blogForm()}
         </div> 
       )}
-       <ul>
+       <div className="blog-grid">
           {blogs.map(blog => (
             <Blog
               key={blog.id}
               blog={blog}
             />
           ))}
-        </ul>
+        </div>
     </div>
   )}
 
