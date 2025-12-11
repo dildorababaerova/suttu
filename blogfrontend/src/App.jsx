@@ -50,6 +50,28 @@ const App = () => {
       }
   }
 
+  const handleLikes = async (id) => {
+    try {
+    const updatedBlog = await blogService.updateLikes(id)
+    console.log(updatedBlog)
+    setBlogs(prev => {
+      const newBlogs = prev.map(blog => blog.id === id ? updatedBlog: blog)
+      return [...newBlogs].sort(( a, b ) => b.likes - a.likes )
+    })
+  
+    setSuccessMessage(`${updatedBlog.title} updated` )
+      setTimeout(()=>{
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (error) {
+        // Обработка ошибки, например, показать сообщение об ошибке
+        setErrorMessage('Error updating blog')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+  }
+
   const blogForm = () => (
     <Togglable buttonLabel = "add new blog" ref={blogFormRef}>
       <AddBlog createBlog={addBlog} />
@@ -107,6 +129,7 @@ const App = () => {
               <Blog
                 key={blog.id}
                 blog={blog}
+                handleLikes= {handleLikes}
               />
           ))}
         </div>

@@ -105,10 +105,24 @@ blogsRouter.post('/', async (req, res) => {
   res.status(201).json(savedBlog)
 })
 
+blogsRouter.put('/:id/likes', async(req, res) => {
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    req.params.id,
+    {$inc:{likes:1}},
+    { new: true } 
+  )
+
+  if (!updatedBlog) {
+    return res.status(404).json({ error: 'Blog not found' })
+  }
+
+res.status(200).json(updatedBlog)
+})
+
 blogsRouter.put('/:id', async (req, res) => {
   const user = req.user
   if(!user) {
-    return res._construct(401).json({ error: 'token missing or invalid for update' })
+    return res.status(401).json({ error: 'token missing or invalid for update' })
   }
   const blog = await Blog.findById(req.params.id)
   if (!blog) {
@@ -126,7 +140,7 @@ blogsRouter.put('/:id', async (req, res) => {
       title:body.title,
       author:body.author,
       url: body.url,
-      likes:body.likes
+      // likes:body.likes
     },
     {
       new:true,

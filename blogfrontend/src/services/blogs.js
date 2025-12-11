@@ -32,9 +32,17 @@ const update = async (id, newObject) => {
   return response.data
 }
 
+const updateLikes = async (id) => {
+  const response = await axios.put(`${baseUrl}/${id}/likes`)
+  return response.data
+}
+
+
+
 export default {
   getAll,
   create,
   update,
-  setToken
+  setToken,
+  updateLikes
 }
