@@ -14,9 +14,12 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
   const[user, setUser] =useState(null)
 
+  const sortBlogs = blogs => [...blogs].sort((a, b) => b.likes - a.likes)
+
+
   useEffect(() => {
     blogService.getAll().then(initialBlogs => {
-      setBlogs(initialBlogs)
+      setBlogs(sortBlogs(initialBlogs))
     })
   }, [])
 
@@ -56,7 +59,7 @@ const App = () => {
     console.log(updatedBlog)
     setBlogs(prev => {
       const newBlogs = prev.map(blog => blog.id === id ? updatedBlog: blog)
-      return [...newBlogs].sort(( a, b ) => b.likes - a.likes )
+      return sortBlogs(newBlogs)
     })
   
     setSuccessMessage(`${updatedBlog.title} updated` )
@@ -107,7 +110,16 @@ const App = () => {
   const handleLogout = () => {
   window.localStorage.removeItem('loggedBlogAppUser')
   setUser(null)
-}
+  }
+
+  const handleDelete = async(id) => {
+    if (window.confirm("Do you want to delete this blog ?")) {
+    await blogService.deleteBlog(id)
+    setBlogs(prev =>{
+      const withoutDeleteBlog = prev.filter(blog => blog.id !==id)
+      return sortBlogs(withoutDeleteBlog)
+    })}
+  }
 
   return (
     <div>
@@ -130,6 +142,7 @@ const App = () => {
                 key={blog.id}
                 blog={blog}
                 handleLikes= {handleLikes}
+                handleDelete = {handleDelete}
               />
           ))}
         </div>

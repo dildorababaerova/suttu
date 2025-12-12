@@ -440,4 +440,88 @@ Testausta varten API-key:
 Testausta varten private key:
 
 543f4e90dfd4055a68be225b190ba8b7
+
+```js
+const sortFunctions = {
+  likes: (a, b) => b.likes - a.likes,
+  author: (a, b) => a.author.localeCompare(b.author),
+  title: (a, b) => a.title.localeCompare(b.title),
+};
+
+const App = () => {
+  const [blogs, setBlogs] = useState([]);
+
+  const sortBlogs = (mode) => {
+    setBlogs((prev) => [...prev].sort(sortFunctions[mode]));
+  };
+
+  return (
+    <div>
+      <div>
+        <button onClick={() => sortBlogs('likes')}>Sort by Likes</button>
+        <button onClick={() => sortBlogs('author')}>Sort by Author</button>
+        <button onClick={() => sortBlogs('title')}>Sort by Title</button>
+      </div>
+
+      <div className="blog-list">
+        {blogs.map((blog) => (
+          <div key={blog.id}>
+            <h3>{blog.title}</h3>
+            <p>{blog.author}</p>
+            <p>Likes: {blog.likes}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+```
+// second option
+
+```js
+const sortFunctions = {
+  likes: (a, b) => b.likes - a.likes,
+  author: (a, b) => a.author.localeCompare(b.author),
+  title: (a, b) => a.title.localeCompare(b.title),
+};
+
+const sortModes = ['likes', 'author', 'title'];
+
+const App = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [sortModeIndex, setSortModeIndex] = useState(0);
+
+  const sortBlogs = (mode) => {
+    setBlogs((prev) => [...prev].sort(sortFunctions[mode]));
+  };
+
+  const handleToggleSort = () => {
+    const nextIndex = (sortModeIndex + 1) % sortModes.length; // циклично
+    setSortModeIndex(nextIndex);
+    sortBlogs(sortModes[nextIndex]);
+  };
+
+  return (
+    <div>
+      <button onClick={handleToggleSort}>
+        Sort by {sortModes[sortModeIndex]} (click to change)
+      </button>
+
+      <div className="blog-list">
+        {blogs.map((blog) => (
+          <div key={blog.id}>
+            <h3>{blog.title}</h3>
+            <p>{blog.author}</p>
+            <p>Likes: {blog.likes}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+```
  

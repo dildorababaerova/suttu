@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import Togglable from './Togglable'
 
-const Blog = ({blog, handleLikes}) => {
+const Blog = ({blog, handleLikes, handleDelete}) => {
   // console.log('Blog', blog);
   const blogRef =useRef()
   
@@ -24,6 +24,7 @@ const Blog = ({blog, handleLikes}) => {
       <p><strong>Likes:</strong> {blog.likes}
       <button onClick = {() => handleLikes(blog.id)}>likes</button>
       </p>
+      <button onClick={() => {handleDelete(blog.id)}}>remove</button>
       </Togglable>
     </div>
   )
