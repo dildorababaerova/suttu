@@ -39,40 +39,40 @@ const App = () => {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(prev => [...prev, (returnedBlog)])
       setSuccessMessage(`${blogObject.title} added` )
-      setTimeout(()=>{
+      setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
       blogFormRef.current.toggleVisibility()
-        
-      } catch (error) {
-        // Обработка ошибки, например, показать сообщение об ошибке
-        setErrorMessage('Error adding blog')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      }
+
+    } catch (error) {
+      // Обработка ошибки, например, показать сообщение об ошибке
+      setErrorMessage('Error adding blog'+ (error.response?.data?.error || error.message))
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const handleLikes = async (id) => {
     try {
-    const updatedBlog = await blogService.updateLikes(id)
-    console.log(updatedBlog)
-    setBlogs(prev => {
-      const newBlogs = prev.map(blog => blog.id === id ? updatedBlog: blog)
-      return sortBlogs(newBlogs)
-    })
-  
-    setSuccessMessage(`${updatedBlog.title} updated` )
-      setTimeout(()=>{
+      const updatedBlog = await blogService.updateLikes(id)
+      console.log(updatedBlog)
+      setBlogs(prev => {
+        const newBlogs = prev.map(blog => blog.id === id ? updatedBlog: blog)
+        return sortBlogs(newBlogs)
+      })
+
+      setSuccessMessage(`${updatedBlog.title} updated` )
+      setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
     } catch (error) {
-        // Обработка ошибки, например, показать сообщение об ошибке
-        setErrorMessage('Error updating blog')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      }
+      // Обработка ошибки, например, показать сообщение об ошибке
+      setErrorMessage('Error updating blog'+ (error.response?.data?.error || error.message))
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const blogForm = () => (
@@ -89,63 +89,76 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      
-    } catch {
-      setErrorMessage('wrong username or password')
-      setTimeout(() =>{
+
+    } catch (error) {
+      setErrorMessage('wrong username or password'+ (error.response?.data?.error || error.message))
+      setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
 
   }
 
-  const loginForm =() =>(
-  <Togglable buttonLabel = 'login'>
-    <LoginForm 
-    handleLogForm={handleLogin}
-    />
-  </Togglable>
+  const loginForm =() => (
+    <Togglable buttonLabel = 'login'>
+      <LoginForm
+        handleLogForm={handleLogin}
+      />
+    </Togglable>
   )
 
   const handleLogout = () => {
-  window.localStorage.removeItem('loggedBlogAppUser')
-  setUser(null)
+    window.localStorage.removeItem('loggedBlogAppUser')
+    setUser(null)
   }
 
   const handleDelete = async(id) => {
-    if (window.confirm("Do you want to delete this blog ?")) {
-    await blogService.deleteBlog(id)
-    setBlogs(prev =>{
-      const withoutDeleteBlog = prev.filter(blog => blog.id !==id)
-      return sortBlogs(withoutDeleteBlog)
-    })}
+    try {
+      if (window.confirm('Do you want to delete this blog ?')) {
+        await blogService.deleteBlog(id)
+        setBlogs(prev => {
+          const withoutDeleteBlog = prev.filter(blog => blog.id !==id)
+          return sortBlogs(withoutDeleteBlog)
+        })}
+      setSuccessMessage('Deleted succesfully')
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    } catch (error) {
+      // Обработка ошибки, например, показать сообщение об ошибке
+      setErrorMessage('Error deleting blog'+ (error.response?.data?.error || error.message))
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+
   }
 
   return (
     <div>
       <Notification successMessage={successMessage} errorMessage={errorMessage} />
       {user === null?
-      <div>
-        {loginForm()}
-      </div>
-      : (
         <div>
-          <h1>Blogs</h1>
+          {loginForm()}
+        </div>
+        : (
+          <div>
+            <h1>Blogs</h1>
             <p>{user.name} logged in</p>
             <LogOut handleLogout= {handleLogout} />
             {blogForm()}
-        </div> 
-      )}
-       <div className="blog-grid">
-          {blogs.map(blog => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                handleLikes= {handleLikes}
-                handleDelete = {handleDelete}
-              />
-          ))}
-        </div>
+          </div>
+        )}
+      <div className="blog-grid">
+        {blogs.map(blog => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLikes= {handleLikes}
+            handleDelete = {handleDelete}
+          />
+        ))}
+      </div>
     </div>
   )}
 

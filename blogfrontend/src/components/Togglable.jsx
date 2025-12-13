@@ -1,19 +1,19 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from 'react'
 
 const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
-  const hideVisible = { display: visible ? 'none' : '' };
-  const showVisible = { display: visible ? '' : 'none' };
+  const hideVisible = { display: visible ? 'none' : '' }
+  const showVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
-    setVisible(prev => !prev);
-  };
+    setVisible(prev => !prev)
+  }
 
   // 🔥 обязательно добавить [] чтобы не было "Timed out waiting for mutation"
   useImperativeHandle(ref, () => ({
     toggleVisibility
-  }), []);
+  }), [])
 
   return (
     <div>
@@ -26,7 +26,7 @@ const Togglable = forwardRef((props, ref) => {
         <button onClick={toggleVisibility}>cancel</button>
       </div>
     </div>
-  );
-});
+  )
+})
 
-export default Togglable;
+export default Togglable

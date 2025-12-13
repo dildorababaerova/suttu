@@ -524,4 +524,6 @@ const App = () => {
 
 
 ```
+
+npm run lint -- --fix
  
