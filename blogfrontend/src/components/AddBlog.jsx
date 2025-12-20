@@ -30,19 +30,31 @@ const AddBlog = ({ createBlog }) => {
       <form onSubmit={addBlog}>
         <div>
           <label>Title:</label>
-          <input value={blogTitle} onChange={handleTitleChange} />
+          <input
+            aria-label='title'
+            value={blogTitle}
+            onChange={handleTitleChange} />
         </div>
         <div>
           <label>Author:</label>
-          <input value={blogAuthor} onChange={handleAuthorChange} />
+          <input
+            aria-label='author'
+            value={blogAuthor}
+            onChange={handleAuthorChange} />
         </div>
         <div>
           <label>URL:</label>
-          <input value={blogUrl} onChange={handleUrlChange} />
+          <input
+            aria-label='url'
+            value={blogUrl}
+            onChange={handleUrlChange} />
         </div>
         <div>
           <label>Likes:</label>
-          <input value={blogLikes} onChange={handleLikesChange} />
+          <input
+            aria-label='likes'
+            value={blogLikes}
+            onChange={handleLikesChange} />
         </div>
         <button type="submit">Add</button>
       </form>
