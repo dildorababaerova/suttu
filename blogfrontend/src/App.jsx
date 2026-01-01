@@ -7,6 +7,7 @@ import LoginForm from './components/LoginForm'
 import AddBlog from './components/AddBlog'
 import Togglable from './components/Togglable'
 import LogOut from './components/Logout'
+import Footer from './components/Footer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -37,7 +38,7 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
-      setBlogs(prev => [...prev, (returnedBlog)])
+      setBlogs(prev => sortBlogs([...prev, (returnedBlog)]))
       setSuccessMessage(`${blogObject.title} added` )
       setTimeout(() => {
         setSuccessMessage(null)
@@ -91,7 +92,7 @@ const App = () => {
       setUser(user)
 
     } catch (error) {
-      setErrorMessage('wrong username or password'+ (error.response?.data?.error || error.message))
+      setErrorMessage(error.response?.data?.error || error.message)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -137,13 +138,13 @@ const App = () => {
   return (
     <div>
       <Notification successMessage={successMessage} errorMessage={errorMessage} />
+      <h1>Blogs</h1>
       {user === null?
         <div>
           {loginForm()}
         </div>
         : (
           <div>
-            <h1>Blogs</h1>
             <p>{user.name} logged in</p>
             <LogOut handleLogout= {handleLogout} />
             {blogForm()}
@@ -159,6 +160,7 @@ const App = () => {
           />
         ))}
       </div>
+      <Footer />
     </div>
   )}
 

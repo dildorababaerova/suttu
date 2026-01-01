@@ -108,15 +108,15 @@ blogsRouter.post('/', async (req, res) => {
 blogsRouter.put('/:id/likes', async(req, res) => {
   const updatedBlog = await Blog.findByIdAndUpdate(
     req.params.id,
-    {$inc:{likes:1}},
-    { new: true } 
+    { $inc:{ likes:1 } },
+    { new: true }
   )
 
   if (!updatedBlog) {
     return res.status(404).json({ error: 'Blog not found' })
   }
 
-res.status(200).json(updatedBlog)
+  res.status(200).json(updatedBlog)
 })
 
 blogsRouter.put('/:id', async (req, res) => {
